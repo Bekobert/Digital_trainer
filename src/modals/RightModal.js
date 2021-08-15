@@ -25,7 +25,7 @@ const FadeInView = props => {
   );
 };
 
-function WrongModal() {
+function RightModal() {
   return (
     <View
       style={{
@@ -40,17 +40,17 @@ function WrongModal() {
       <FadeInView
         style={{
           flex: 5,
-          backgroundColor: 'red',
+          backgroundColor: 'green',
           alignItems: 'center',
           justifyContent: 'center',
         }}>
         <Fontisto
-          name="dislike"
+          name="like"
           size={60}
           color="white"
           style={{margin: 20}}></Fontisto>
         <Text style={{fontSize: 40, color: 'white', fontWeight: 'bold'}}>
-          YANLIŞ
+          DOĞRU
         </Text>
       </FadeInView>
       <View style={{flex: 1, backgroundColor: 'transparent'}}></View>
@@ -58,4 +58,4 @@ function WrongModal() {
   );
 }
 
-export default WrongModal;
+export default RightModal;

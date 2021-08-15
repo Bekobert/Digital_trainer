@@ -3,26 +3,46 @@ import React, {useState, useEffect} from 'react';
 import {Text, View, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import FlipCard from 'react-native-flip-card';
-import {ForwardOutlined} from '@ant-design/icons';
 import Modal from 'react-native-modal';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 const colorblue = ['#192f6a', '#4c669f', '#3b5998'];
 const colorpurp = ['#1d0a28', '#390d4f', '#6b1e72'];
-const answers = [
+const answers1 = [
   'Denklem Kurma',
   'Çarpanlara Ayırma',
   'Sayılar',
   'Bölünebilme, EBOB ve EKOK',
   'Fonksiyonlar',
 ];
-const QuestionDesc =
+const QuestionDesc1 =
   'Yukarıdaki şekilde verilen her bir dairenin içine birbirinden yazılacaktır. Bu sayıların ikisi şekilde verilmiştir. Bulundukları dörtgenin köşelerindeki dairelerde yazan dört sayının çarpımına eşit olan A ve B sayıları aralarında asaldır.';
 
-const Question = 'Buna göre A + B en az kaçtır?';
+const Question1 = 'Buna göre A + B en az kaçtır?';
 
-const correct = [3];
+const QuestionImage1 = '../images/Soru2Image.png';
+
+const correct1 = [3];
+
+////////////////////////////////////////////////////////////////
+const answers = [
+  'Kareköklü Sayılar',
+  'Çarpanlara Ayırma',
+  'Kesirler',
+  'Bölünebilme, EBOB ve EKOK',
+  'Fonksiyonlar',
+];
+const QuestionDesc =
+  'Aşağıdaki 16 eş parçadan oluşan şekilde, pembe renge boyalı parçaların sayısının tüm parçaların sayısına oranı ile bir kesir ifade ediliyor.';
+
+const Question =
+  'Bu kesrin kareköküne eşit olan kesri ifade etmek için boyalı olmayan parçalardan kaç tanesi daha pembe renge boyanmalıdır?';
+
+const QuestionImage = '../images/Soru2Image.png';
+
+const correct = [0, 2];
 
 const FirstStage = ({navigation}) => {
   const [s1color, sets1color] = useState({borderColor: '#cfbc22'});
@@ -84,7 +104,7 @@ const FirstStage = ({navigation}) => {
           <View
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <Image
-              source={require('../images/Soru1.png')}
+              source={require(QuestionImage)}
               resizeMode="contain"
               style={{flex: 1}}
             />
@@ -102,11 +122,6 @@ const FirstStage = ({navigation}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Image
-              source={require('../images/Soru1.png')}
-              resizeMode="contain"
-              style={{flex: 1}}
-            />
             <Text
               style={{
                 fontSize: 16,
@@ -114,6 +129,11 @@ const FirstStage = ({navigation}) => {
               }}>
               {QuestionDesc}
             </Text>
+            <Image
+              source={require(QuestionImage)}
+              resizeMode="contain"
+              style={{flex: 1}}
+            />
             <Text style={{marginTop: 8, fontSize: 16, fontWeight: 'bold'}}>
               {Question}
             </Text>
@@ -127,6 +147,7 @@ const FirstStage = ({navigation}) => {
           }}>
           {answers.map((answer, index) => (
             <TouchableOpacity
+              key={index}
               style={[
                 styles.buttons,
                 {
@@ -167,7 +188,8 @@ const FirstStage = ({navigation}) => {
               flex: 0.25,
               backgroundColor: '#ff9400',
               borderRadius: 20,
-              padding: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
               marginBottom: 10,
             }}
             onPress={() => {
@@ -176,12 +198,14 @@ const FirstStage = ({navigation}) => {
                 correct,
                 selectedIndexes !== correct,
               );
-              toggleModal();
-              isEqual(selectedIndexes, correct)
-                ? navigation.navigate('Stage2')
-                : {};
-            }}
-          />
+              if (isEqual(selectedIndexes, correct)) {
+                navigation.navigate('Stage2');
+              } else {
+                toggleModal();
+              }
+            }}>
+            <Entypo name="forward" size={30} color="white"></Entypo>
+          </TouchableOpacity>
         </View>
       </LinearGradient>
       <Modal

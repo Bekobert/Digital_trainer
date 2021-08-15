@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import {Text, View, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import FlipCard from 'react-native-flip-card';
-import {ForwardOutlined} from '@ant-design/icons';
 
 const colorblue = ['#192f6a', '#4c669f', '#3b5998'];
 const colorpurp = ['#1d0a28', '#390d4f', '#6b1e72'];
@@ -197,7 +196,9 @@ const ThirdStage = ({navigation}) => {
             atsb(1);
           }}>
           <View style={[styles.buttonsS, b1select]}>
-            <Text style={{fontSize: 16}}>Her daire farklı bir doğal sayıya sahip olmalı</Text>
+            <Text style={{fontSize: 16}}>
+              Her daire farklı bir doğal sayıya sahip olmalı
+            </Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity
@@ -206,7 +207,9 @@ const ThirdStage = ({navigation}) => {
             atsb(2);
           }}>
           <View style={styles.buttonsS}>
-            <Text style={{fontSize: 16}}>A + B toplamı en küçük değerine sahip olmalı</Text>
+            <Text style={{fontSize: 16}}>
+              A + B toplamı en küçük değerine sahip olmalı
+            </Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity
