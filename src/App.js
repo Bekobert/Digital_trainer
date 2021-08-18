@@ -8,6 +8,8 @@ import HomeScreen from './screens/HomeScreen';
 import FirstStage from './screens/FirstStage';
 import SecondStage from './screens/SecondStage';
 import ThirdStage from './screens/ThirdStage';
+import SecondStageProt from './screens/SecondStageProt';
+import LastStage from './screens/LastStage';
 
 const Stack = createStackNavigator();
 
@@ -25,8 +27,9 @@ export default function App() {
           }}>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Stage1" component={FirstStage} />
-          <Stack.Screen name="Stage2" component={SecondStage} />
+          <Stack.Screen name="Stage2" component={SecondStageProt} />
           <Stack.Screen name="Stage3" component={ThirdStage} />
+          <Stack.Screen name="Stage4" component={LastStage} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

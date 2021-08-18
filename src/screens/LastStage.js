@@ -47,9 +47,11 @@ const answers = [
   '8            5             7',
 ];
 
+const answerImage = '../images/A7.png';
+
 const correct = 2;
 
-const HomeScreen = ({navigation}) => {
+const LastStage = ({navigation}) => {
   function nextChar(c, index) {
     return String.fromCharCode(c.charCodeAt(0) + index);
   }
@@ -72,24 +74,6 @@ const HomeScreen = ({navigation}) => {
     <>
       <LinearGradient colors={colorpurp} style={styles.linearGradient}>
         <ScrollView>
-          <TouchableOpacity
-            style={styles.hints}
-            onPress={() => navigation.navigate('Stage1')}>
-            <MaterialIcons
-              color="white"
-              name="question-answer"
-              size={26}></MaterialIcons>
-            <Text
-              style={{
-                fontFamily: 'sans-serif',
-                fontSize: 22,
-                fontWeight: 'bold',
-                color: 'white',
-              }}>
-              {'   '}
-              Nasıl Çözerim{' '}
-            </Text>
-          </TouchableOpacity>
           <View
             style={{
               flex: 5,
@@ -98,10 +82,8 @@ const HomeScreen = ({navigation}) => {
               backgroundColor: 'white',
               padding: 10,
               margin: 5,
-              marginTop: 20,
-              borderRadius: 10,
-              borderWidth: 8,
-              borderColor: '#4ab562',
+              marginTop: 60,
+              borderRadius: 50,
             }}>
             <Image
               source={require(QuestionImage)}
@@ -118,12 +100,11 @@ const HomeScreen = ({navigation}) => {
               flex: 8,
               flexDirection: 'column',
               padding: 10,
-              marginTop: 20,
             }}>
             {answers.map((answer, index) => (
               <TouchableOpacity
                 key={index}
-                style={[styles.buttons]}
+                style={styles.buttons}
                 onPress={() => {
                   console.log('index = ', index, ' / ', 'correct = ', correct);
                   if (index === correct) {
@@ -133,9 +114,6 @@ const HomeScreen = ({navigation}) => {
                     toggleWModal();
                   }
                 }}>
-                <View style={styles.buttonsR}>
-                  <Text style={styles.texts}>{nextChar('A', index)}</Text>
-                </View>
                 <View style={styles.buttonsS}>
                   <Text style={{fontSize: 20}}>{answer}</Text>
                 </View>
@@ -150,9 +128,36 @@ const HomeScreen = ({navigation}) => {
         animationOutTiming={1000}
         onBackdropPress={() => {
           setWModalVisible(false);
-          navigation.navigate('Stage1');
+          //navigation.navigate('Stage1');
         }}>
-        <WModal></WModal>
+        <View
+          style={{
+            flex: 0.3,
+            backgroundColor: '#e0e0e0',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 50,
+            padding: 10,
+          }}>
+          <View
+            style={{
+              backgroundColor: '#228B22',
+              //padding: 10,
+              borderRadius: 50,
+              //justifyContent: 'center',
+              //alignItems: 'center',
+            }}>
+            <Image
+              source={require(answerImage)}
+              resizeMode="stretch"
+              style={{
+                width: 360,
+                height: 150,
+                borderRadius: 10,
+              }}
+            />
+          </View>
+        </View>
       </Modal>
       <Modal
         isVisible={isRModalVisible}
@@ -220,4 +225,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default LastStage;
