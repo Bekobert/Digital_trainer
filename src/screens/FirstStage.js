@@ -12,44 +12,45 @@ import LinearGradient from 'react-native-linear-gradient';
 import FlipCard from 'react-native-flip-card';
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
+import {useSelector} from 'react-redux';
 
 const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 const colorblue = ['#192f6a', '#4c669f', '#3b5998'];
 const colorpurp = ['#1d0a28', '#390d4f', '#6b1e72'];
-const answers1 = [
-  'Denklem Kurma',
-  'Çarpanlara Ayırma',
-  'Sayılar',
-  'Bölünebilme, EBOB ve EKOK',
-  'Fonksiyonlar',
-];
-const QuestionDesc1 =
-  'Yukarıdaki şekilde verilen her bir dairenin içine birbirinden yazılacaktır. Bu sayıların ikisi şekilde verilmiştir. Bulundukları dörtgenin köşelerindeki dairelerde yazan dört sayının çarpımına eşit olan A ve B sayıları aralarında asaldır.';
+// const answers1 = [
+//   'Denklem Kurma',
+//   'Çarpanlara Ayırma',
+//   'Sayılar',
+//   'Bölünebilme, EBOB ve EKOK',
+//   'Fonksiyonlar',
+// ];
+// const QuestionDesc1 =
+//   'Yukarıdaki şekilde verilen her bir dairenin içine birbirinden yazılacaktır. Bu sayıların ikisi şekilde verilmiştir. Bulundukları dörtgenin köşelerindeki dairelerde yazan dört sayının çarpımına eşit olan A ve B sayıları aralarında asaldır.';
 
-const Question1 = 'Buna göre A + B en az kaçtır?';
+// const Question1 = 'Buna göre A + B en az kaçtır?';
 
-const QuestionImage1 = '../images/Soru2Image.png';
+// const QuestionImage1 = '../images/Soru2Image.png';
 
-const correct1 = [3];
+// const correct1 = [3];
 
-////////////////////////////////////////////////////////////////
-const answers3 = [
-  'Kareköklü Sayılar',
-  'Çarpanlara Ayırma',
-  'Kesirler',
-  'Bölünebilme, EBOB ve EKOK',
-  'Fonksiyonlar',
-];
-const QuestionDesc =
-  'Aşağıdaki 16 eş parçadan oluşan şekilde, pembe renge boyalı parçaların sayısının tüm parçaların sayısına oranı ile bir kesir ifade ediliyor.';
+// ////////////////////////////////////////////////////////////////
+// const answers3 = [
+//   'Kareköklü Sayılar',
+//   'Çarpanlara Ayırma',
+//   'Kesirler',
+//   'Bölünebilme, EBOB ve EKOK',
+//   'Fonksiyonlar',
+// ];
+// const QuestionDesc =
+//   'Aşağıdaki 16 eş parçadan oluşan şekilde, pembe renge boyalı parçaların sayısının tüm parçaların sayısına oranı ile bir kesir ifade ediliyor.';
 
-const Question =
-  'Bu kesrin kareköküne eşit olan kesri ifade etmek için boyalı olmayan parçalardan kaç tanesi daha pembe renge boyanmalıdır?';
+// const Question =
+//   'Bu kesrin kareköküne eşit olan kesri ifade etmek için boyalı olmayan parçalardan kaç tanesi daha pembe renge boyanmalıdır?';
 
-const QuestionImage3 = '../images/Soru2Image.png';
-//////////////////////////////////////////////////////////////////
-const QuestionImage = '../images/Kat.png';
+// const QuestionImage3 = '../images/Soru2Image.png';
+// //////////////////////////////////////////////////////////////////
+// const QuestionImage = '../images/Kat.png';
 
 const answers = [
   'Geometri',
@@ -65,6 +66,9 @@ const FirstStage = ({navigation}) => {
   const [s2color, sets2color] = useState({borderColor: '#cfbc22'});
   const [s3color, sets3color] = useState({borderColor: '#cfbc22'});
   const [s4color, sets4color] = useState({borderColor: '#cfbc22'});
+
+  const question = useSelector(state => state.question);
+  const subjects = useSelector(state => state.subjects);
 
   const [selectedIndexes, setselectedIndexes] = useState([]);
 
@@ -138,7 +142,7 @@ const FirstStage = ({navigation}) => {
                 //maxWidth: 150,
               }}>
               <Image
-                source={require(QuestionImage)}
+                source={{uri: question?.image}}
                 resizeMode="stretch"
                 style={{
                   width: '95%',
@@ -154,9 +158,9 @@ const FirstStage = ({navigation}) => {
               flexDirection: 'column',
               padding: 10,
             }}>
-            {answers.map((answer, index) => (
+            {subjects.map((subject, index) => (
               <TouchableOpacity
-                key={index}
+                key={subject?._id}
                 style={[
                   styles.buttons,
                   {
@@ -180,7 +184,7 @@ const FirstStage = ({navigation}) => {
                   }
                 }}>
                 <View style={styles.buttonsS}>
-                  <Text style={{fontSize: 20}}>{answer}</Text>
+                  <Text style={{fontSize: 20}}>{subject?.name}</Text>
                 </View>
               </TouchableOpacity>
             ))}

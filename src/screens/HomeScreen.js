@@ -9,50 +9,55 @@ import {
   Image,
   ScrollView,
   Dimensions,
+  SafeAreaView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Modal from 'react-native-modal';
 import RModal from '../modals/RightModal';
 import WModal from '../modals/WrongModal';
+import {useSelector} from 'react-redux';
 
 const colorblue = ['#192f6a', '#4c669f', '#3b5998'];
 const colorpurp = ['#1d0a28', '#390d4f', '#6b1e72'];
 
-const QuestionDesc1 =
-  'Yukarıdaki şekilde verilen her bir dairenin içine birbirinden yazılacaktır. Bu sayıların ikisi şekilde verilmiştir. Bulundukları dörtgenin köşelerindeki dairelerde yazan dört sayının çarpımına eşit olan A ve B sayıları aralarında asaldır.';
-const Question1 = 'Buna göre A + B en az kaçtır?';
+// const QuestionDesc1 =
+//   'Yukarıdaki şekilde verilen her bir dairenin içine birbirinden yazılacaktır. Bu sayıların ikisi şekilde verilmiştir. Bulundukları dörtgenin köşelerindeki dairelerde yazan dört sayının çarpımına eşit olan A ve B sayıları aralarında asaldır.';
+// const Question1 = 'Buna göre A + B en az kaçtır?';
 
-const answers1 = ['162', '191', '258', '289'];
+// const answers1 = ['162', '191', '258', '289'];
 
-const QuestionImage1 = '../images/Soru1.png';
-////////////////////////////////////////////////////////////////
-const QuestionDesc =
-  'Aşağıdaki 16 eş parçadan oluşan şekilde, pembe renge boyalı parçaların sayısının tüm parçaların sayısına oranı ile bir kesir ifade ediliyor.';
+// const QuestionImage1 = '../images/Soru1.png';
+// ////////////////////////////////////////////////////////////////
+// const QuestionDesc =
+//   'Aşağıdaki 16 eş parçadan oluşan şekilde, pembe renge boyalı parçaların sayısının tüm parçaların sayısına oranı ile bir kesir ifade ediliyor.';
 
-const Question =
-  'Bu kesrin kareköküne eşit olan kesri ifade etmek için boyalı olmayan parçalardan kaç tanesi daha pembe renge boyanmalıdır?';
+// const Question =
+//   'Bu kesrin kareköküne eşit olan kesri ifade etmek için boyalı olmayan parçalardan kaç tanesi daha pembe renge boyanmalıdır?';
 
-const answers2 = ['1', '2', '3', '4', '5'];
+// const answers2 = ['1', '2', '3', '4', '5'];
 
-const QuestionImage2 = '../images/Soru2Image.png';
-////////////////////////////////////////////////////////////////
-const QuestionImage = '../images/Kat.png';
+// const QuestionImage2 = '../images/Soru2Image.png';
+// ////////////////////////////////////////////////////////////////
+// const QuestionImage = '../images/Kat.png';
 
-const answers = [
-  '3            4             5',
-  '4            6             3',
-  '5            7             6',
-  '6            3             4',
-  '8            5             7',
-];
+// const answers = [
+//   '3            4             5',
+//   '4            6             3',
+//   '5            7             6',
+//   '6            3             4',
+//   '8            5             7',
+// ];
 
-const correct = 2;
+// const correct = 2;
+
+// function nextChar(c, index) {
+//   return String.fromCharCode(c.charCodeAt(0) + index);
+// }
 
 const HomeScreen = ({navigation}) => {
-  function nextChar(c, index) {
-    return String.fromCharCode(c.charCodeAt(0) + index);
-  }
+  const question = useSelector(state => state.question);
+  const answers = useSelector(state => state.answers);
 
   const [isRModalVisible, setRModalVisible] = useState(false);
 
@@ -69,8 +74,8 @@ const HomeScreen = ({navigation}) => {
   const {width, height} = Dimensions.get('window');
 
   return (
-    <>
-      <LinearGradient colors={colorpurp} style={styles.linearGradient}>
+    <LinearGradient colors={colorpurp} style={styles.linearGradient}>
+      <SafeAreaView style={{flex: 1}}>
         <ScrollView>
           <TouchableOpacity
             style={styles.hints}
@@ -81,7 +86,6 @@ const HomeScreen = ({navigation}) => {
               size={26}></MaterialIcons>
             <Text
               style={{
-                fontFamily: 'sans-serif',
                 fontSize: 22,
                 fontWeight: 'bold',
                 color: 'white',
@@ -104,7 +108,7 @@ const HomeScreen = ({navigation}) => {
               borderColor: '#4ab562',
             }}>
             <Image
-              source={require(QuestionImage)}
+              source={{uri: question?.image}}
               resizeMode="stretch"
               style={{
                 width: '95%',
@@ -120,13 +124,13 @@ const HomeScreen = ({navigation}) => {
               padding: 10,
               marginTop: 20,
             }}>
-            {answers.map((answer, index) => (
+            {answers.map(answer => (
               <TouchableOpacity
-                key={index}
+                key={answer?._id}
                 style={[styles.buttons]}
                 onPress={() => {
-                  console.log('index = ', index, ' / ', 'correct = ', correct);
-                  if (index === correct) {
+                  console.log('Is answer correct = ', answer?.isCorrect);
+                  if (answer?.isCorrect) {
                     console.log('yep');
                     toggleRModal();
                   } else {
@@ -134,36 +138,36 @@ const HomeScreen = ({navigation}) => {
                   }
                 }}>
                 <View style={styles.buttonsR}>
-                  <Text style={styles.texts}>{nextChar('A', index)}</Text>
+                  <Text style={styles.texts}>{answer?.option}</Text>
                 </View>
                 <View style={styles.buttonsS}>
-                  <Text style={{fontSize: 20}}>{answer}</Text>
+                  <Text style={{fontSize: 20}}>{answer?.text}</Text>
                 </View>
               </TouchableOpacity>
             ))}
           </View>
         </ScrollView>
-      </LinearGradient>
-      <Modal
-        isVisible={isWModalVisible}
-        animationInTiming={600}
-        animationOutTiming={1000}
-        onBackdropPress={() => {
-          setWModalVisible(false);
-          navigation.navigate('Stage1');
-        }}>
-        <WModal></WModal>
-      </Modal>
-      <Modal
-        isVisible={isRModalVisible}
-        animationInTiming={600}
-        animationOutTiming={1000}
-        onBackdropPress={() => {
-          setRModalVisible(false);
-        }}>
-        <RModal></RModal>
-      </Modal>
-    </>
+        <Modal
+          isVisible={isWModalVisible}
+          animationInTiming={600}
+          animationOutTiming={1000}
+          onBackdropPress={() => {
+            setWModalVisible(false);
+            navigation.navigate('Stage1');
+          }}>
+          <WModal></WModal>
+        </Modal>
+        <Modal
+          isVisible={isRModalVisible}
+          animationInTiming={600}
+          animationOutTiming={1000}
+          onBackdropPress={() => {
+            setRModalVisible(false);
+          }}>
+          <RModal></RModal>
+        </Modal>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 

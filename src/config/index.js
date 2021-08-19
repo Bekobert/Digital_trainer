@@ -1,3 +1,4 @@
+//TODO: move to env-config and ignore on git!
 export default {
-  API_PATH: 'https://jsonplaceholder.typicode.com',
+  API_PATH: 'http://localhost:5000',
 };

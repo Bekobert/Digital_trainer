@@ -12,9 +12,7 @@ target 'digitaltranier' do
     :hermes_enabled => false
   )
 
-  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   target 'digitaltranierTests' do
     inherit! :complete
