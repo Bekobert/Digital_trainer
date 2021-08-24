@@ -18,7 +18,9 @@ import RModal from '../modals/RightModal';
 import WModal from '../modals/WrongModal';
 import {useSelector} from 'react-redux';
 
-const colorblue = ['#192f6a', '#4c669f', '#3b5998'];
+const colorblue = ['#192f6a', '#4c669f', '#318CE7'];
+const colorblue3 = ['#005f69', '#4c669f', '#7FFFD4'];
+const colorblue2 = ['#11435a', '#2793c3', '#51e4e9'];
 const colorpurp = ['#1d0a28', '#390d4f', '#6b1e72'];
 
 // const QuestionDesc1 =
@@ -76,17 +78,17 @@ const HomeScreen = ({navigation}) => {
   return (
     <LinearGradient colors={colorpurp} style={styles.linearGradient}>
       <SafeAreaView style={{flex: 1}}>
-        <ScrollView>
+        <ScrollView style={{flex: 1}}>
           <TouchableOpacity
             style={styles.hints}
             onPress={() => navigation.navigate('Stage1')}>
             <MaterialIcons
               color="white"
               name="question-answer"
-              size={26}></MaterialIcons>
+              size={17}></MaterialIcons>
             <Text
               style={{
-                fontSize: 22,
+                fontSize: 17,
                 fontWeight: 'bold',
                 color: 'white',
               }}>
@@ -96,22 +98,32 @@ const HomeScreen = ({navigation}) => {
           </TouchableOpacity>
           <View
             style={{
-              flex: 5,
+              flex: 10,
               justifyContent: 'center',
               alignItems: 'center',
               backgroundColor: 'white',
               padding: 10,
-              margin: 5,
+              margin: 10,
               marginTop: 20,
-              borderRadius: 10,
-              borderWidth: 8,
-              borderColor: '#4ab562',
+              borderBottomWidth: 2,
+              borderTopWidth: 2,
+              borderColor: 'black',
+              borderBottomLeftRadius: 50,
+              borderTopRightRadius: 50,
+              shadowColor: 'white',
+              shadowOffset: {
+                width: 0,
+                height: 15,
+              },
+              shadowOpacity: 0.55,
+              shadowRadius: 16.0,
+              elevation: 28,
             }}>
             <Image
               source={{uri: question?.image}}
               resizeMode="stretch"
               style={{
-                width: '95%',
+                width: '90%',
                 height: 250,
                 borderRadius: 10,
               }}
@@ -138,74 +150,67 @@ const HomeScreen = ({navigation}) => {
                   }
                 }}>
                 <View style={styles.buttonsR}>
-                  <Text style={styles.texts}>{answer?.option}</Text>
+                  <Text style={styles.texts}>{answer?.option}.</Text>
                 </View>
                 <View style={styles.buttonsS}>
-                  <Text style={{fontSize: 20}}>{answer?.text}</Text>
+                  <Text style={{fontSize: 17}}>{answer?.text}</Text>
                 </View>
               </TouchableOpacity>
             ))}
           </View>
         </ScrollView>
-        <Modal
-          isVisible={isWModalVisible}
-          animationInTiming={600}
-          animationOutTiming={1000}
-          onBackdropPress={() => {
-            setWModalVisible(false);
-            navigation.navigate('Stage1');
-          }}>
-          <WModal></WModal>
-        </Modal>
-        <Modal
-          isVisible={isRModalVisible}
-          animationInTiming={600}
-          animationOutTiming={1000}
-          onBackdropPress={() => {
-            setRModalVisible(false);
-          }}>
-          <RModal></RModal>
-        </Modal>
       </SafeAreaView>
+      <Modal
+        isVisible={isWModalVisible}
+        animationInTiming={600}
+        animationOutTiming={1000}
+        onBackdropPress={() => {
+          setWModalVisible(false);
+          navigation.navigate('Stage1');
+        }}>
+        <WModal></WModal>
+      </Modal>
+      <Modal
+        isVisible={isRModalVisible}
+        animationInTiming={600}
+        animationOutTiming={1000}
+        onBackdropPress={() => {
+          setRModalVisible(false);
+        }}>
+        <RModal></RModal>
+      </Modal>
     </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   texts: {
-    fontSize: 22,
+    fontSize: 17,
     fontWeight: 'bold',
     fontFamily: 'Arial',
   },
   linearGradient: {
     flex: 1,
-    paddingLeft: 5,
-    paddingRight: 5,
-  },
-  backside: {
-    flex: 1,
-    backgroundColor: '#390e50',
   },
   hints: {
+    borderWidth: 2,
+    borderColor: 'black',
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#4ab562',
+    backgroundColor: '#50C878',
     marginRight: 50,
     marginLeft: 50,
     marginTop: 20,
-    marginBottom: 10,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonsR: {
-    flex: 1.5,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    margin: 2,
-    marginRight: 10,
-    marginLeft: 10,
+    backgroundColor: '#f8801d',
+    margin: 1,
     borderRadius: 20,
   },
   buttonsS: {
@@ -213,14 +218,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
-    margin: 2,
+    margin: 1,
     borderRadius: 20,
   },
   buttons: {
     flex: 2,
     flexDirection: 'row',
-    margin: 5,
+    marginBottom: 15,
     borderRadius: 30,
+    backgroundColor: '#f5f5f5',
   },
 });
 

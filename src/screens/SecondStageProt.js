@@ -14,6 +14,8 @@ import Modal from 'react-native-modal';
 import RNMultiSelect, {
   IMultiSelectDataTypes,
 } from '@freakycoder/react-native-multiple-select';
+import {ProgressSteps, ProgressStep} from 'react-native-progress-steps';
+import {useSelector} from 'react-redux';
 
 const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -24,7 +26,7 @@ const QuestionImage = '../images/Kat.png';
 const Questions = [
   'Arif ile Berk arasındaki kat sayısı',
   'Berk ile Can arasındaki kat sayısı',
-  'Her kattaki basamak sayısı kaçtır?',
+  'Her kattaki basamak sayısı',
   'Arif ile Berk arasındaki yaşlar farkı',
 ];
 
@@ -32,11 +34,13 @@ const quest: Array<IMultiSelectDataTypes> = [
   [
     {
       id: 0,
+      set: 0,
       value: 'Tektir',
       isChecked: false,
     },
     {
       id: 1,
+      set: 1,
       value: 'Çifttir',
       isChecked: false,
     },
@@ -44,11 +48,13 @@ const quest: Array<IMultiSelectDataTypes> = [
   [
     {
       id: 2,
+      set: 0,
       value: 'Tektir',
       isChecked: false,
     },
     {
       id: 3,
+      set: 1,
       value: 'Çifttir',
       isChecked: false,
     },
@@ -56,21 +62,25 @@ const quest: Array<IMultiSelectDataTypes> = [
   [
     {
       id: 4,
+      set: 0,
       value: '25',
       isChecked: false,
     },
     {
       id: 5,
+      set: 1,
       value: '27',
       isChecked: false,
     },
     {
       id: 6,
+      set: 2,
       value: '28',
       isChecked: false,
     },
     {
       id: 7,
+      set: 3,
       value: 'Böyle bir bilgi yok!',
       isChecked: false,
     },
@@ -78,31 +88,55 @@ const quest: Array<IMultiSelectDataTypes> = [
   [
     {
       id: 8,
+      set: 0,
       value: '5',
       isChecked: false,
     },
     {
       id: 9,
+      set: 1,
       value: '6',
       isChecked: false,
     },
     {
       id: 10,
+      set: 2,
       value: 'Böyle bir bilgi yok!',
       isChecked: false,
     },
   ],
 ];
 
-const Wrongs = [
+/*const Wrongs = [
   'Dikkatli okuyun! Arif ile Berk arasında kat sayısı tek olmalıdır.',
   'Soruyu bir daha gözden geçirin! Berk ile Can arasındaki kat sayısı çift olmalıdır.',
   'Her kattaki basamak sayısı ile ilgili bir bilgi soruda geçmemektedir!',
   'Soruda Arif, Berk ve Can ile ilgili yaş bilgisi yoktur!',
+];*/
+const Wrongs = [
+  {
+    image: '../src/images/9lukKesir.png',
+    text: 'Boyalı 9 tane kare görülmektedir.',
+  },
+  {
+    image: '../src/images/16lıkKesir.png',
+    text: 'Toplam 16 tane kare vardır.',
+  },
+  {
+    image: '../src/images/KesirGösterim.png',
+    text: 'Boyalı karelerin tüm karelerin sayısına bölümü 9/16 kesrini verir.',
+  },
+  {
+    image: '',
+    text: '',
+  },
 ];
 const corrects = [0, 1, 3, 2];
 
 const SecondStageProt = ({navigation}) => {
+  const question = useSelector(state => state.question);
+  const information = useSelector(state => state.information);
+
   const [isModalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -114,152 +148,99 @@ const SecondStageProt = ({navigation}) => {
   const toggleWModal = index => {
     setWModalVisible(!isWModalVisible);
   };
-
+  const [Items, setItems] = useState([]);
   const [fixindex, setfixindex] = useState(0);
   return (
     <>
-      <LinearGradient colors={colorpurp} style={{flex: 1}}>
-        <View style={styles.stager}>
-          <View style={[styles.stages, {borderColor: 'green'}]} />
-          <View style={[styles.stages, {}]} />
-          <View style={[styles.stages, {}]} />
-          <View style={[styles.stages, {}]} />
-        </View>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'white',
-            padding: 15,
-            margin: 15,
-            borderRadius: 20,
-            borderWidth: 8,
-            borderColor: '#4ab562',
-            //maxWidth: 150,
-          }}>
-          <Image
-            source={require(QuestionImage)}
-            resizeMode="stretch"
+      <LinearGradient colors={colorpurp} style={styles.linearGradient}>
+        <ScrollView>
+          <View style={styles.stager}>
+            <ProgressSteps topOffset={0} marginBottom={0} activeStep={1}>
+              <ProgressStep label="Soru Türü"></ProgressStep>
+              <ProgressStep
+                removeBtnRow={true}
+                label="Değişkenler"></ProgressStep>
+              <ProgressStep label="Kısıtlar"></ProgressStep>
+              <ProgressStep label="Çözüm"></ProgressStep>
+            </ProgressSteps>
+          </View>
+          <View
             style={{
-              width: '95%',
-              height: 250,
-              borderRadius: 10,
-            }}
-          />
-        </View>
-
-        <ScrollView
-          style={{
-            flex: 6,
-            marginTop: 10,
-
-            borderColor: 'white',
-          }}
-          contentContainerStyle={{
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          {Questions.map((question, index) => (
-            <View style={{flexDirection: 'row', flex: 0.1}}>
-              <TouchableOpacity
-                onPress={() => {
-                  setfixindex(index);
-                  toggleModal();
-                }}
-                style={{
-                  flex: 4,
-                  backgroundColor: 'white',
-                  borderRadius: 20,
-                  margin: 10,
-                  //paddingVertical: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={{fontSize: 20}}>{question}</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'white',
+              padding: 10,
+              margin: 5,
+              borderRadius: 40,
+              //borderWidth: 8,
+              //borderColor: '#4ab562',
+              //maxWidth: 150,
+            }}>
+            <Image
+              source={{uri: question?.image}}
+              resizeMode="stretch"
+              style={{
+                width: '95%',
+                height: 250,
+                borderRadius: 10,
+              }}
+            />
+          </View>
+          <View style={{marginTop: 20}}>
+            {information.map((information, index) => (
+              <View
+                key={information?._id}
+                style={{flexDirection: 'row', flex: 0.1}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setfixindex(index);
+                    toggleModal();
+                  }}
+                  style={{
+                    flex: 5,
+                    flexDirection: 'row',
+                    backgroundColor: '#e0e0e0',
+                    borderRadius: 5,
+                    margin: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      paddingVertical: 6,
+                      flex: 0.5,
+                      margin: 5,
+                      backgroundColor: 'transparent',
+                      borderRadius: 2,
+                      borderWidth: 2,
+                      borderColor: 'green',
+                    }}></View>
+                  <Text style={{flex: 15, fontSize: 17, marginLeft: 10}}>
+                    {information?.text}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
         </ScrollView>
         <View
           style={{
-            flexDirection: 'row',
-            flex: 0.3,
-            justifyContent: 'space-between',
+            flex: 2.5,
+            marginBottom: 10,
           }}>
-          <View
-            style={{
-              flex: 10,
-              flexDirection: 'row',
-              backgroundColor: 'transparent',
-              borderRadius: 20,
-              margin: 10,
-            }}>
-            <View
-              style={{
-                flex: 1,
-                margin: 6,
-                borderRadius: 5,
-                backgroundColor: 'transparent',
-                borderWidth: 2,
-                borderColor: 'white',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Entypo name="check" color="green" size={28}></Entypo>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                margin: 6,
-                borderRadius: 5,
-                backgroundColor: 'transparent',
-                borderWidth: 2,
-                borderColor: 'white',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Entypo name="check" color="green" size={28}></Entypo>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                margin: 6,
-                borderRadius: 5,
-                backgroundColor: 'transparent',
-                borderWidth: 2,
-                borderColor: 'white',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Entypo name="check" color="green" size={28}></Entypo>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                margin: 6,
-                borderRadius: 5,
-                backgroundColor: 'transparent',
-                borderWidth: 2,
-                borderColor: 'white',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Entypo name="check" color="green" size={28}></Entypo>
-            </View>
-          </View>
-
           <TouchableOpacity
             style={{
-              flex: 4,
+              height: 40,
+              flex: 10,
               backgroundColor: '#d8801d',
-
-              margin: 10,
-              borderRadius: 50,
+              marginLeft: 280,
+              margin: 5,
+              borderRadius: 5,
               justifyContent: 'center',
               alignItems: 'center',
             }}
-            onPress={() => navigation.navigate('Stage4')}>
-            <Text style={{color: '#e0e0e0', fontSize: 20, fontWeight: 'bold'}}>
+            onPress={() => navigation.navigate('Stage3')}>
+            <Text style={{color: '#e0e0e0', fontSize: 17, fontWeight: 'bold'}}>
               Tamam
             </Text>
           </TouchableOpacity>
@@ -292,10 +273,20 @@ const SecondStageProt = ({navigation}) => {
             menuItemTextStyle={{fontSize: 22}}
             doneButtonText="Tamam"
             data={quest[fixindex]}
-            onSelect={selectedItems =>
-              console.log('SelectedItems: ', selectedItems.value)
-            }
+            onSelect={selectedItems => {
+              console.log('SelectedItems: ', selectedItems[fixindex]);
+              Items.push(selectedItems);
+            }}
             onDoneButtonPress={() => {
+              console.log('asd: ', Items);
+
+              Items.map(item => {
+                //console.log(corrects[fixindex], ' ::::: ', Item[fixindex].set);
+                /*if (isEqual(corrects[fixindex], Item[fixindex])) {
+                  console.log('openmid');
+                }*/
+                console.log('id: ', item);
+              });
               toggleModal();
             }}>
             Tamam

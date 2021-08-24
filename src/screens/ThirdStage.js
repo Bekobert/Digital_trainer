@@ -1,254 +1,315 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {Text, View, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+} from 'react-native';
+import {NativeBaseProvider, Box} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
-import FlipCard from 'react-native-flip-card';
+import Entypo from 'react-native-vector-icons/Entypo';
+import Modal from 'react-native-modal';
+import RNMultiSelect, {
+  IMultiSelectDataTypes,
+} from '@freakycoder/react-native-multiple-select';
+import {ProgressSteps, ProgressStep} from 'react-native-progress-steps';
+import {useSelector} from 'react-redux';
 
-const colorblue = ['#192f6a', '#4c669f', '#3b5998'];
+const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
 const colorpurp = ['#1d0a28', '#390d4f', '#6b1e72'];
 
+const QuestionImage = '../images/Kat.png';
+
+const Questions = [
+  'Arif ile Berk arasındaki kat sayısı',
+  'Berk ile Can arasındaki kat sayısı',
+  'Her kattaki basamak sayısı',
+  'Arif ile Berk arasındaki yaşlar farkı',
+];
+
+const quest: Array<IMultiSelectDataTypes> = [
+  [
+    {
+      id: 0,
+      set: 0,
+      value: 'Tektir',
+      isChecked: false,
+    },
+    {
+      id: 1,
+      set: 1,
+      value: 'Çifttir',
+      isChecked: false,
+    },
+  ],
+  [
+    {
+      id: 2,
+      set: 0,
+      value: 'Tektir',
+      isChecked: false,
+    },
+    {
+      id: 3,
+      set: 1,
+      value: 'Çifttir',
+      isChecked: false,
+    },
+  ],
+  [
+    {
+      id: 4,
+      set: 0,
+      value: '25',
+      isChecked: false,
+    },
+    {
+      id: 5,
+      set: 1,
+      value: '27',
+      isChecked: false,
+    },
+    {
+      id: 6,
+      set: 2,
+      value: '28',
+      isChecked: false,
+    },
+    {
+      id: 7,
+      set: 3,
+      value: 'Böyle bir bilgi yok!',
+      isChecked: false,
+    },
+  ],
+  [
+    {
+      id: 8,
+      set: 0,
+      value: '5',
+      isChecked: false,
+    },
+    {
+      id: 9,
+      set: 1,
+      value: '6',
+      isChecked: false,
+    },
+    {
+      id: 10,
+      set: 2,
+      value: 'Böyle bir bilgi yok!',
+      isChecked: false,
+    },
+  ],
+];
+
+const Wrongs = [
+  {
+    image: '../src/images/9lukKesir.png',
+    text: 'Boyalı 9 tane kare görülmektedir.',
+  },
+  {
+    image: '../src/images/16lıkKesir.png',
+    text: 'Toplam 16 tane kare vardır.',
+  },
+];
+const corrects = [0, 1, 3, 2];
+
 const ThirdStage = ({navigation}) => {
-  const [checked, setChecked] = React.useState('first');
+  const question = useSelector(state => state.question);
+  const constraint = useSelector(state => state.constraint);
 
-  const [s1color, sets1color] = useState({borderColor: '#008000'});
-  const [s2color, sets2color] = useState({borderColor: '#cfbc22'});
-  const [s3color, sets3color] = useState({borderColor: '#cfbc22'});
-  const [s4color, sets4color] = useState({borderColor: '#cfbc22'});
+  const [isModalVisible, setModalVisible] = useState(false);
 
-  const [count, setcount] = useState(0);
-  const [button, setbutton] = useState(0);
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
-  const [b1select, setb1select] = useState({});
-  const [b2select, setb2select] = useState({});
-  const [b3select, setb3select] = useState({});
-  const [b4select, setb4select] = useState({});
-  const [b5select, setb5select] = useState({});
+  const [isWModalVisible, setWModalVisible] = useState(false);
 
-  function ats(count) {
-    switch (count) {
-      case 0:
-        sets1color({borderColor: '#008000'});
-        break;
-      case 1:
-        sets2color({borderColor: '#008000'});
-        break;
-      case 2:
-        sets3color({borderColor: '#008000'});
-        break;
-      case 3:
-        sets4color({borderColor: '#008000'});
-        break;
-      default:
-        sets1color({borderColor: '#cfbc22'});
-        sets2color({borderColor: '#cfbc22'});
-        sets3color({borderColor: '#cfbc22'});
-        sets4color({borderColor: '#cfbc22'});
-        break;
-    }
-  }
-
-  const [b1, setb1] = useState(false);
-  const [b2, setb2] = useState(false);
-  const [b3, setb3] = useState(false);
-  const [b4, setb4] = useState(false);
-  const [b5, setb5] = useState(false);
-
-  function atsb(button) {
-    switch (button) {
-      case 1:
-        b1
-          ? setb1select({backgroundColor: 'green'})
-          : setb1select({backgroundColor: 'white'});
-        setb1(!b1);
-        break;
-      case 2:
-        b2
-          ? setb2select({borderWidth: 5, borderColor: 'green'})
-          : setb2select({borderWidth: 0, borderColor: 'green'});
-        setb2(!b2);
-        break;
-      case 3:
-        b3
-          ? setb3select({borderWidth: 5, borderColor: 'green'})
-          : setb3select({borderWidth: 0, borderColor: 'green'});
-        setb3(!b3);
-        break;
-      case 4:
-        b4
-          ? setb4select({borderWidth: 5, borderColor: 'green'})
-          : setb4select({borderWidth: 0, borderColor: 'green'});
-        setb4(!b4);
-        break;
-      case 5:
-        b5
-          ? setb5select({borderWidth: 5, borderColor: 'green'})
-          : setb5select({borderWidth: 0, borderColor: 'green'});
-        setb5(!b5);
-        break;
-
-      default:
-        break;
-    }
-  }
-
+  const toggleWModal = index => {
+    setWModalVisible(!isWModalVisible);
+  };
+  const [Items, setItems] = useState([]);
+  const [fixindex, setfixindex] = useState(0);
   return (
-    <LinearGradient colors={colorpurp} style={styles.linearGradient}>
-      <View style={styles.stager} onPress={() => navigation.navigate('Stage1')}>
-        <View style={[styles.stages, s1color]} />
-        <View style={[styles.stages, s2color]} />
-        <View style={[styles.stages, s3color]} />
-        <View style={[styles.stages, s4color]} />
-      </View>
-      <FlipCard
-        friction={6}
-        perspective={1000}
-        flipHorizontal={true}
-        flipVertical={false}
-        flip={false}
-        clickable={true}
-        onFlipEnd={isFlipEnd => {
-          console.log('isFlipEnd', isFlipEnd);
-        }}
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#d8801d',
-          padding: 10,
-          margin: 5,
-          borderRadius: 50,
-          shadowColor: 'white',
-          shadowOffset: {
-            width: 0,
-            height: 10,
-          },
-          shadowOpacity: 0.53,
-          shadowRadius: 13.97,
-
-          elevation: 21,
-        }}
-        onPress={() => {
-          ats(count);
-          setcount((count + 1) % 5);
-        }}>
+    <>
+      <LinearGradient colors={colorpurp} style={styles.linearGradient}>
+        <ScrollView>
+          <View style={styles.stager}>
+            <ProgressSteps topOffset={0} marginBottom={0} activeStep={2}>
+              <ProgressStep label="Soru Türü"></ProgressStep>
+              <ProgressStep label="Değişkenler"></ProgressStep>
+              <ProgressStep removeBtnRow={true} label="Kısıtlar"></ProgressStep>
+              <ProgressStep label="Çözüm"></ProgressStep>
+            </ProgressSteps>
+          </View>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'white',
+              padding: 10,
+              margin: 5,
+              borderRadius: 40,
+              //borderWidth: 8,
+              //borderColor: '#4ab562',
+              //maxWidth: 150,
+            }}>
+            <Image
+              source={{uri: question?.image}}
+              resizeMode="stretch"
+              style={{
+                width: '95%',
+                height: 250,
+                borderRadius: 10,
+              }}
+            />
+          </View>
+          <View style={{marginTop: 20}}>
+            {Questions.map((constraint, index) => (
+              <View
+                key={constraint?._id}
+                style={{flexDirection: 'row', flex: 0.1}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setfixindex(index);
+                    toggleModal();
+                  }}
+                  style={{
+                    flex: 5,
+                    flexDirection: 'row',
+                    backgroundColor: '#e0e0e0',
+                    borderRadius: 5,
+                    margin: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      paddingVertical: 6,
+                      flex: 0.5,
+                      margin: 5,
+                      backgroundColor: 'transparent',
+                      borderRadius: 2,
+                      borderWidth: 2,
+                      borderColor: 'green',
+                    }}></View>
+                  <Text style={{flex: 15, fontSize: 17, marginLeft: 10}}>
+                    {constraint?.text}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+        <View
+          style={{
+            flex: 2.5,
+            marginBottom: 10,
+          }}>
+          <TouchableOpacity
+            style={{
+              height: 40,
+              flex: 10,
+              backgroundColor: '#d8801d',
+              marginLeft: 280,
+              margin: 5,
+              borderRadius: 5,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={() => navigation.navigate('Stage4')}>
+            <Text style={{color: '#e0e0e0', fontSize: 17, fontWeight: 'bold'}}>
+              Tamam
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </LinearGradient>
+      <Modal
+        isVisible={isModalVisible}
+        animationInTiming={600}
+        animationOutTiming={1000}
+        onBackdropPress={() => setModalVisible(false)}>
         <View
           style={{
             flex: 1,
+            backgroundColor: 'transparent',
             justifyContent: 'center',
             alignItems: 'center',
-            maxWidth: 350,
+            borderRadius: 50,
           }}>
-          <Image
-            source={require('../images/Stage31.png')}
-            resizeMode="contain"
-            style={{flex: 4}}
-          />
-
-          <Text
-            style={{
-              margin: 18,
-              fontSize: 16,
+          <RNMultiSelect
+            darkMode={false}
+            doneButtonTextStyle={{
+              color: '#e0e0e0',
+              fontSize: 20,
               fontWeight: 'bold',
-              color: 'black',
+            }}
+            buttonContainerStyle={{backgroundColor: '#d8801d'}}
+            menuBarContainerStyle={{backgroundColor: '#e0e0e0'}}
+            doneButtonContainerStyle={{backgroundColor: 'red'}}
+            placeholder="Seçiniz"
+            menuItemTextStyle={{fontSize: 22}}
+            doneButtonText="Tamam"
+            data={quest[fixindex]}
+            onSelect={selectedItems => {
+              //console.log('SelectedItems: ', selectedItems);
+              Items.push(selectedItems);
+            }}
+            onDoneButtonPress={() => {
+              console.log(Items),
+                selectedItems.forEach(element => {
+                  console.log(element.id);
+                });
+              /*Items.map(Item => {
+                console.log(corrects[fixindex], ' ::::: ', Item[fixindex].set);
+                if (isEqual(corrects[fixindex], Item[fixindex])) {
+                  console.log('openmid');
+                }
+              });*/
+              toggleModal();
             }}>
-            {' '}
-            Soruya göre hangileri doğru sayılabilir?{' '}
-          </Text>
+            Tamam
+          </RNMultiSelect>
         </View>
-
+      </Modal>
+      <Modal
+        isVisible={isWModalVisible}
+        animationInTiming={600}
+        animationOutTiming={1000}
+        onBackdropPress={() => setWModalVisible(false)}>
         <View
           style={{
-            flex: 1,
-            maxWidth: 350,
+            flex: 0.3,
+            backgroundColor: '#e0e0e0',
             justifyContent: 'center',
             alignItems: 'center',
+            borderRadius: 50,
           }}>
-          <Image
-            source={require('../images/Soru1.png')}
-            resizeMode="contain"
-            style={{flex: 1}}
-          />
-          <Text
+          <View
             style={{
-              fontSize: 16,
-              color: 'black',
+              backgroundColor: '#B22222',
+              padding: 30,
+              borderRadius: 50,
+              justifyContent: 'center',
+              alignItems: 'center',
             }}>
-            Yukarıdaki şekilde verilen her bir dairenin içine birbirinden
-            yazılacaktır. Bu sayıların ikisi şekilde verilmiştir. Bulundukları
-            dörtgenin köşelerindeki dairelerde yazan dört sayının çarpımına eşit
-            olan A ve B sayıları aralarında asaldır.
-          </Text>
-          <Text style={{marginTop: 8, fontSize: 16, fontWeight: 'bold'}}>
-            {' '}
-            Buna göre A + B en az kaçtır?{' '}
-          </Text>
+            <Text
+              style={{
+                fontSize: 30,
+                fontWeight: 'bold',
+                marginBottom: 20,
+                color: '#e0e0e0',
+              }}></Text>
+          </View>
         </View>
-      </FlipCard>
-      <View
-        style={{
-          flex: 0.8,
-          flexDirection: 'column',
-          padding: 10,
-        }}>
-        <TouchableOpacity
-          style={[styles.buttons, b1select]}
-          onPress={() => {
-            atsb(1);
-          }}>
-          <View style={[styles.buttonsS, b1select]}>
-            <Text style={{fontSize: 16}}>
-              Her daire farklı bir doğal sayıya sahip olmalı
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.buttons, b2select]}
-          onPress={() => {
-            atsb(2);
-          }}>
-          <View style={styles.buttonsS}>
-            <Text style={{fontSize: 16}}>
-              A + B toplamı en küçük değerine sahip olmalı
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.buttons, b3select]}
-          onPress={() => {
-            atsb(3);
-          }}>
-          <View style={styles.buttonsS}>
-            <Text style={{fontSize: 20}}>3</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.buttons, b4select]}
-          onPress={() => {
-            atsb(4);
-          }}>
-          <View style={styles.buttonsS}>
-            <Text style={{fontSize: 20}}>5</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.buttons, b5select]}
-          onPress={() => {
-            atsb(5);
-          }}>
-          <View style={styles.buttonsS}>
-            <Text style={{fontSize: 20}}>7</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          flex: 0.16,
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-        }}
-      />
-    </LinearGradient>
+      </Modal>
+    </>
   );
 };
 
@@ -269,12 +330,8 @@ const styles = StyleSheet.create({
   },
   linearGradient: {
     flex: 1,
-    paddingLeft: 5,
-    paddingRight: 5,
-  },
-  backside: {
-    flex: 1,
-    backgroundColor: '#390e50',
+    //justifyContent: 'flex-start',
+    //alignItems: 'center',
   },
   stager: {
     flex: 0.1,
@@ -287,26 +344,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buttonsR: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    margin: 2,
-    marginRight: 10,
-    marginLeft: 10,
-    borderRadius: 20,
-  },
   buttonsS: {
     flex: 8,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
-    margin: 2,
     borderRadius: 20,
   },
   buttons: {
-    flex: 2,
+    flex: 1,
     flexDirection: 'row',
     margin: 5,
     borderRadius: 30,

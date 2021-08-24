@@ -48,10 +48,12 @@ const SecondStage = ({navigation}) => {
     <>
       <LinearGradient colors={colorpurp} style={styles.linearGradient}>
         <View style={styles.stager}>
-          <View style={[styles.stages, {borderColor: 'green'}]} />
-          <View style={[styles.stages, {}]} />
-          <View style={[styles.stages, {}]} />
-          <View style={[styles.stages, {}]} />
+          <ProgressSteps topOffset={0} marginBottom={0}>
+            <ProgressStep label="Soru Türü"></ProgressStep>
+            <ProgressStep label="Değişkenler"></ProgressStep>
+            <ProgressStep label="Kısıtlar"></ProgressStep>
+            <ProgressStep label="Çözüm"></ProgressStep>
+          </ProgressSteps>
         </View>
         <TouchableOpacity
           onPress={() => {}}

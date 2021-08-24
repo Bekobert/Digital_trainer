@@ -15,6 +15,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Modal from 'react-native-modal';
 import RModal from '../modals/RightModal';
 import WModal from '../modals/WrongModal';
+import {ProgressSteps, ProgressStep} from 'react-native-progress-steps';
 
 const colorblue = ['#192f6a', '#4c669f', '#3b5998'];
 const colorpurp = ['#1d0a28', '#390d4f', '#6b1e72'];
@@ -49,7 +50,7 @@ const answers = [
 
 const answerImage = '../images/A7.png';
 
-const correct = 2;
+const correct = 4;
 
 const LastStage = ({navigation}) => {
   function nextChar(c, index) {
@@ -74,6 +75,14 @@ const LastStage = ({navigation}) => {
     <>
       <LinearGradient colors={colorpurp} style={styles.linearGradient}>
         <ScrollView>
+          <View style={styles.stager}>
+            <ProgressSteps topOffset={0} marginBottom={0} activeStep={3}>
+              <ProgressStep label="Soru Türü"></ProgressStep>
+              <ProgressStep label="Değişkenler"></ProgressStep>
+              <ProgressStep label="Kısıtlar"></ProgressStep>
+              <ProgressStep removeBtnRow={true} label="Çözüm"></ProgressStep>
+            </ProgressSteps>
+          </View>
           <View
             style={{
               flex: 5,
@@ -82,8 +91,7 @@ const LastStage = ({navigation}) => {
               backgroundColor: 'white',
               padding: 10,
               margin: 5,
-              marginTop: 60,
-              borderRadius: 50,
+              borderRadius: 40,
             }}>
             <Image
               source={require(QuestionImage)}
@@ -98,8 +106,8 @@ const LastStage = ({navigation}) => {
           <View
             style={{
               flex: 8,
-              flexDirection: 'column',
-              padding: 10,
+              marginTop: 20,
+              padding: 4,
             }}>
             {answers.map((answer, index) => (
               <TouchableOpacity
@@ -115,7 +123,7 @@ const LastStage = ({navigation}) => {
                   }
                 }}>
                 <View style={styles.buttonsS}>
-                  <Text style={{fontSize: 20}}>{answer}</Text>
+                  <Text style={{fontSize: 17}}>{answer}</Text>
                 </View>
               </TouchableOpacity>
             ))}
@@ -173,24 +181,26 @@ const LastStage = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  texts: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    fontFamily: 'Arial',
-  },
   linearGradient: {
     flex: 1,
     paddingLeft: 5,
     paddingRight: 5,
   },
-  backside: {
-    flex: 1,
-    backgroundColor: '#390e50',
-  },
   hints: {
     flex: 1,
     flexDirection: 'row',
     backgroundColor: '#4ab562',
+    marginRight: 50,
+    marginLeft: 50,
+    marginTop: 20,
+    marginBottom: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  stager: {
+    flex: 0.1,
+    flexDirection: 'row',
     marginRight: 50,
     marginLeft: 50,
     marginTop: 20,

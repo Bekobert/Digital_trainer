@@ -7,12 +7,15 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  Animated,
+  Easing,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import FlipCard from 'react-native-flip-card';
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {useSelector} from 'react-redux';
+import {ProgressSteps, ProgressStep} from 'react-native-progress-steps';
 
 const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -52,12 +55,12 @@ const colorpurp = ['#1d0a28', '#390d4f', '#6b1e72'];
 // //////////////////////////////////////////////////////////////////
 // const QuestionImage = '../images/Kat.png';
 
-const answers = [
+/*const answers = [
   'Geometri',
   'Sayı Bilgisi',
   'Üslü Sayılar',
   'Tek Sayı Çift Sayı İlişkileri',
-];
+];*/
 
 const correct = [1, 3];
 
@@ -83,16 +86,43 @@ const FirstStage = ({navigation}) => {
   const toggleRModal = () => {
     setRModalVisible(!isRModalVisible);
   };
+  /*<View style={[styles.stages, s1color]} />
+            <View style={[styles.stages, s2color]} />
+            <View style={[styles.stages, s3color]} />
+            <View style={[styles.stages, s4color]} />*/
+  //const selVal = useState(new Animated.Value(0))[0];
+  const [selVal, setAselVal] = useState(new Animated.Value(0));
+
+  function selY() {
+    Animated.timing(selVal, {
+      toValue: 1,
+      duration: 2000,
+      easing: Easing.bounce,
+      useNativeDriver: false,
+    }).start();
+  }
+
+  const boxInterpolation = selVal.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['#f5f5f5', '#ffe4b2'],
+  });
+  const animatedStyle = boxInterpolation;
+
+  const [errors, setErrors] = useState([]);
 
   return (
     <>
       <LinearGradient colors={colorpurp} style={styles.linearGradient}>
         <ScrollView>
           <View style={styles.stager}>
-            <View style={[styles.stages, s1color]} />
-            <View style={[styles.stages, s2color]} />
-            <View style={[styles.stages, s3color]} />
-            <View style={[styles.stages, s4color]} />
+            <ProgressSteps topOffset={0} marginBottom={0}>
+              <ProgressStep
+                removeBtnRow={true}
+                label="Soru Türü"></ProgressStep>
+              <ProgressStep label="Değişkenler"></ProgressStep>
+              <ProgressStep label="Kısıtlar"></ProgressStep>
+              <ProgressStep label="Çözüm"></ProgressStep>
+            </ProgressSteps>
           </View>
           <FlipCard
             friction={6}
@@ -113,7 +143,7 @@ const FirstStage = ({navigation}) => {
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: '#d8801d',
+                backgroundColor: '#ffe4b2',
                 borderRadius: 20,
                 padding: 50,
                 marginTop: 50,
@@ -122,7 +152,7 @@ const FirstStage = ({navigation}) => {
               <Text
                 style={{
                   marginTop: 8,
-                  fontSize: 20,
+                  fontSize: 17,
                   fontWeight: 'bold',
                   color: 'black',
                 }}>
@@ -164,13 +194,14 @@ const FirstStage = ({navigation}) => {
                 style={[
                   styles.buttons,
                   {
-                    borderWidth: 5,
+                    borderWidth: 4,
                     borderColor: selectedIndexes.includes(index)
                       ? 'green'
                       : 'transparent',
                   },
                 ]}
                 onPress={() => {
+                  selY();
                   const currentIndexes = [...selectedIndexes];
                   const foundIndex = currentIndexes.findIndex(i => i === index);
                   if (foundIndex !== -1) {
@@ -183,9 +214,17 @@ const FirstStage = ({navigation}) => {
                     setselectedIndexes([...currentIndexes, index]);
                   }
                 }}>
-                <View style={styles.buttonsS}>
-                  <Text style={{fontSize: 20}}>{subject?.name}</Text>
-                </View>
+                <Animated.View
+                  style={[
+                    styles.buttonsS,
+                    {
+                      backgroundColor: selectedIndexes.includes(index)
+                        ? animatedStyle
+                        : 'white',
+                    },
+                  ]}>
+                  <Text style={{fontSize: 17}}>{subject?.name}</Text>
+                </Animated.View>
               </TouchableOpacity>
             ))}
           </View>
@@ -212,9 +251,25 @@ const FirstStage = ({navigation}) => {
                   correct,
                   selectedIndexes !== correct,
                 );
-                if (isEqual(selectedIndexes, correct)) {
+                const Calculatederrors = [];
+                selectedIndexes.forEach(selectedIndex => {
+                  if (!subjects[selectedIndex].isCorrect) {
+                    //error
+                    console.log(subjects[selectedIndex].error.text);
+                    Calculatederrors.push(subjects[selectedIndex].error.text);
+                  }
+                });
+                console.log(Calculatederrors);
+                if (Calculatederrors.length > 0) {
+                  setErrors(Calculatederrors);
+                  toggleModal();
+                } else if (
+                  selectedIndexes.length ===
+                  subjects.filter(subject => subject.isCorrect).length
+                ) {
                   toggleRModal();
                 } else {
+                  setErrors(['Eksik işaretlediniz! Dikkatli seçim yapın.']);
                   toggleModal();
                 }
               }}>
@@ -230,7 +285,6 @@ const FirstStage = ({navigation}) => {
         onBackdropPress={() => setModalVisible(false)}>
         <View
           style={{
-            flex: 0.3,
             backgroundColor: '#e0e0e0',
             justifyContent: 'center',
             alignItems: 'center',
@@ -257,7 +311,7 @@ const FirstStage = ({navigation}) => {
               style={{
                 fontSize: 20,
               }}>
-              Bu soru {answers[1]} ve {answers[3]} ile ilgili.
+              {errors.join('\n')}
             </Text>
           </View>
         </View>
@@ -295,9 +349,7 @@ const FirstStage = ({navigation}) => {
               }}>
               Doğru Cevap!
             </Text>
-            <Text style={{fontSize: 20}}>
-              Bu soru {answers[1]} ve {answers[3]} ile ilgili.
-            </Text>
+            <Text style={{fontSize: 20}}>Bu soru ve ile ilgili.</Text>
           </View>
         </View>
       </Modal>
@@ -344,7 +396,7 @@ const styles = StyleSheet.create({
     flex: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    //backgroundColor: '#f5f5f5',
     borderRadius: 20,
   },
   buttons: {

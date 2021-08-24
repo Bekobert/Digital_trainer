@@ -11,6 +11,7 @@ import FirstStage from './screens/FirstStage';
 import SecondStage from './screens/SecondStage';
 import ThirdStage from './screens/ThirdStage';
 import SecondStageProt from './screens/SecondStageProt';
+import ErrorPanel from './modals/ErrorPanel';
 import LastStage from './screens/LastStage';
 import {useSelector} from 'react-redux';
 
@@ -42,6 +43,7 @@ export default function Navigation() {
           headerTintColor: 'white',
           headerStyle: {backgroundColor: 'tomato'},
         }}>
+        <Stack.Screen name="ErrorPanel" component={ErrorPanel} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Stage1" component={FirstStage} />
         <Stack.Screen name="Stage2" component={SecondStageProt} />
