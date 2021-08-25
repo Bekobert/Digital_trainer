@@ -1,4 +1,5 @@
-//TODO: move to env-config and ignore on git!
+import {API_PATHS, ENVIRONMENT} from './env-config';
+
 export default {
-  API_PATH: 'http://192.168.1.30:5000',
+  API_PATH: API_PATHS[ENVIRONMENT],
 };
