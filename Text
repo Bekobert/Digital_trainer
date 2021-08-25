@@ -20,3 +20,13 @@
               shadowRadius: 100.97,
 
               elevation: 51,
+
+
+              <View style={styles.stager}>
+            <ProgressSteps topOffset={0} marginBottom={0} activeStep={3}>
+              <ProgressStep label="Soru Türü"></ProgressStep>
+              <ProgressStep label="Değişkenler"></ProgressStep>
+              <ProgressStep label="Kısıtlar"></ProgressStep>
+              <ProgressStep removeBtnRow={true} label="Çözüm"></ProgressStep>
+            </ProgressSteps>
+          </View>

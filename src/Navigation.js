@@ -12,6 +12,7 @@ import SecondStage from './screens/SecondStage';
 import ThirdStage from './screens/ThirdStage';
 import SecondStageProt from './screens/SecondStageProt';
 import ErrorPanel from './modals/ErrorPanel';
+import ErrorPanel2 from './modals/ErrorPanel2';
 import LastStage from './screens/LastStage';
 import {useSelector} from 'react-redux';
 
@@ -49,6 +50,7 @@ export default function Navigation() {
         <Stack.Screen name="Stage2" component={SecondStageProt} />
         <Stack.Screen name="Stage3" component={ThirdStage} />
         <Stack.Screen name="Stage4" component={LastStage} />
+        <Stack.Screen name="ErrorPanel2" component={ErrorPanel2} />
       </Stack.Navigator>
     </NavigationContainer>
   );

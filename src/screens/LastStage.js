@@ -9,6 +9,7 @@ import {
   Image,
   ScrollView,
   Dimensions,
+  SafeAreaView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -16,11 +17,12 @@ import Modal from 'react-native-modal';
 import RModal from '../modals/RightModal';
 import WModal from '../modals/WrongModal';
 import {ProgressSteps, ProgressStep} from 'react-native-progress-steps';
+import {useSelector} from 'react-redux';
 
 const colorblue = ['#192f6a', '#4c669f', '#3b5998'];
 const colorpurp = ['#1d0a28', '#390d4f', '#6b1e72'];
 
-const QuestionDesc1 =
+/*const QuestionDesc1 =
   'Yukarıdaki şekilde verilen her bir dairenin içine birbirinden yazılacaktır. Bu sayıların ikisi şekilde verilmiştir. Bulundukları dörtgenin köşelerindeki dairelerde yazan dört sayının çarpımına eşit olan A ve B sayıları aralarında asaldır.';
 const Question1 = 'Buna göre A + B en az kaçtır?';
 
@@ -50,9 +52,11 @@ const answers = [
 
 const answerImage = '../images/A7.png';
 
-const correct = 4;
+const correct = 4;*/
 
 const LastStage = ({navigation}) => {
+  const question = useSelector(state => state.question);
+  const answers = useSelector(state => state.answers);
   function nextChar(c, index) {
     return String.fromCharCode(c.charCodeAt(0) + index);
   }
@@ -72,9 +76,9 @@ const LastStage = ({navigation}) => {
   const {width, height} = Dimensions.get('window');
 
   return (
-    <>
-      <LinearGradient colors={colorpurp} style={styles.linearGradient}>
-        <ScrollView>
+    <LinearGradient colors={colorpurp} style={styles.linearGradient}>
+      <SafeAreaView style={{flex: 1}}>
+        <ScrollView style={{flex: 1}}>
           <View style={styles.stager}>
             <ProgressSteps topOffset={0} marginBottom={0} activeStep={3}>
               <ProgressStep label="Soru Türü"></ProgressStep>
@@ -85,19 +89,32 @@ const LastStage = ({navigation}) => {
           </View>
           <View
             style={{
-              flex: 5,
+              flex: 10,
               justifyContent: 'center',
               alignItems: 'center',
               backgroundColor: 'white',
               padding: 10,
-              margin: 5,
-              borderRadius: 40,
+              margin: 10,
+              marginTop: 20,
+              borderBottomWidth: 2,
+              borderTopWidth: 2,
+              borderColor: 'black',
+              borderBottomLeftRadius: 50,
+              borderTopRightRadius: 50,
+              shadowColor: 'white',
+              shadowOffset: {
+                width: 0,
+                height: 15,
+              },
+              shadowOpacity: 0.55,
+              shadowRadius: 16.0,
+              elevation: 28,
             }}>
             <Image
-              source={require(QuestionImage)}
+              source={{uri: question?.image}}
               resizeMode="stretch"
               style={{
-                width: '95%',
+                width: '90%',
                 height: 250,
                 borderRadius: 10,
               }}
@@ -106,30 +123,37 @@ const LastStage = ({navigation}) => {
           <View
             style={{
               flex: 8,
+              flexDirection: 'column',
+              padding: 10,
               marginTop: 20,
-              padding: 4,
             }}>
-            {answers.map((answer, index) => (
+            {answers.map(answer => (
               <TouchableOpacity
-                key={index}
-                style={styles.buttons}
+                key={answer?._id}
+                style={[styles.buttons]}
                 onPress={() => {
-                  console.log('index = ', index, ' / ', 'correct = ', correct);
-                  if (index === correct) {
-                    console.log('yep');
-                    toggleRModal();
+                  console.log('Is answer correct = ', answer?.isCorrect);
+                  if (answer?.isCorrect) {
+                    console.log(answer?._id);
+                    navigation.navigate('ErrorPanel2', {name: answer?.text});
+                    //toggleRModal();
                   } else {
-                    toggleWModal();
+                    console.log(' ');
+                    navigation.navigate('ErrorPanel2', {name: answer?.text});
+                    //toggleWModal();
                   }
                 }}>
+                <View style={styles.buttonsR}>
+                  <Text style={styles.texts}>{answer?.option}.</Text>
+                </View>
                 <View style={styles.buttonsS}>
-                  <Text style={{fontSize: 17}}>{answer}</Text>
+                  <Text style={{fontSize: 17}}>{answer?.text}</Text>
                 </View>
               </TouchableOpacity>
             ))}
           </View>
         </ScrollView>
-      </LinearGradient>
+      </SafeAreaView>
       <Modal
         isVisible={isWModalVisible}
         animationInTiming={600}
@@ -138,34 +162,7 @@ const LastStage = ({navigation}) => {
           setWModalVisible(false);
           //navigation.navigate('Stage1');
         }}>
-        <View
-          style={{
-            flex: 0.3,
-            backgroundColor: '#e0e0e0',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 50,
-            padding: 10,
-          }}>
-          <View
-            style={{
-              backgroundColor: '#228B22',
-              //padding: 10,
-              borderRadius: 50,
-              //justifyContent: 'center',
-              //alignItems: 'center',
-            }}>
-            <Image
-              source={require(answerImage)}
-              resizeMode="stretch"
-              style={{
-                width: 360,
-                height: 150,
-                borderRadius: 10,
-              }}
-            />
-          </View>
-        </View>
+        <WModal></WModal>
       </Modal>
       <Modal
         isVisible={isRModalVisible}
@@ -176,7 +173,7 @@ const LastStage = ({navigation}) => {
         }}>
         <RModal></RModal>
       </Modal>
-    </>
+    </LinearGradient>
   );
 };
 

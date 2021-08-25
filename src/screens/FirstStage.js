@@ -143,6 +143,27 @@ const FirstStage = ({navigation}) => {
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
+                backgroundColor: 'white',
+                padding: 10,
+                margin: 5,
+                borderRadius: 40,
+                //maxWidth: 150,
+              }}>
+              <Image
+                source={{uri: question?.image}}
+                resizeMode="stretch"
+                style={{
+                  width: '95%',
+                  height: 250,
+                  borderRadius: 10,
+                }}
+              />
+            </View>
+
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
                 backgroundColor: '#ffe4b2',
                 borderRadius: 20,
                 padding: 50,
@@ -159,27 +180,6 @@ const FirstStage = ({navigation}) => {
                 {' '}
                 Bu soru hangi konularla ilgilidir?{' '}
               </Text>
-            </View>
-
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'white',
-                padding: 10,
-                margin: 5,
-                borderRadius: 40,
-                //maxWidth: 150,
-              }}>
-              <Image
-                source={{uri: question?.image}}
-                resizeMode="stretch"
-                style={{
-                  width: '95%',
-                  height: 250,
-                  borderRadius: 10,
-                }}
-              />
             </View>
           </FlipCard>
           <View
@@ -326,19 +326,21 @@ const FirstStage = ({navigation}) => {
         }}>
         <View
           style={{
-            flex: 0.3,
+            flex: 0.5,
             backgroundColor: '#e0e0e0',
             justifyContent: 'center',
             alignItems: 'center',
-            borderRadius: 50,
+            borderRadius: 20,
           }}>
           <View
             style={{
               backgroundColor: '#228B22',
-              padding: 30,
-              borderRadius: 50,
+              padding: 80,
+              marginHorizontal: 10,
+              borderRadius: 20,
               justifyContent: 'center',
               alignItems: 'center',
+              overflow: 'hidden',
             }}>
             <Text
               style={{

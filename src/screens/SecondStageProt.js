@@ -151,6 +151,8 @@ const SecondStageProt = ({navigation}) => {
     setWModalVisible(!isWModalVisible);
   };
 
+  const [errorArr, seterrorArr] = useState([]);
+
   // const [Items, setItems] = useState([]);
   // const [fixindex, setfixindex] = useState(0);
 
@@ -216,6 +218,7 @@ const SecondStageProt = ({navigation}) => {
     return (
       <MultiSelect
         items={items}
+        scrollEnabled={false}
         uniqueKey="_id"
         displayKey="option"
         onSelectedItemsChange={onSelectedItemsChange}
@@ -342,13 +345,20 @@ const SecondStageProt = ({navigation}) => {
               alignSelf: 'flex-end',
               backgroundColor: '#d8801d',
               marginTop: 12,
+              marginBottom: 10,
               paddingHorizontal: 10,
               paddingVertical: 10,
               borderRadius: 5,
               justifyContent: 'center',
               alignItems: 'center',
             }}
-            onPress={() => navigation.navigate('Stage3')}>
+            onPress={() => {
+              information.forEach(info => {
+                errorArr.push(info.text);
+              });
+
+              navigation.navigate('ErrorPanel');
+            }}>
             <Text style={{color: '#e0e0e0', fontSize: 17, fontWeight: 'bold'}}>
               Tamam
             </Text>
