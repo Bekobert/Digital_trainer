@@ -60,14 +60,16 @@ const ErrorPanel2 = ({route, navigation}) => {
       <TouchableOpacity
         onPress={() => navigation.navigate('Stage4')}
         style={{
-          justifyContent: 'flex-end',
-          alignItems: 'center',
+          alignSelf: 'flex-end',
           backgroundColor: '#d8801d',
-          padding: 10,
-          margin: 10,
-          marginVertical: 20,
+          marginTop: 12,
+          marginBottom: 10,
+          marginHorizontal: 10,
+          paddingHorizontal: 10,
+          paddingVertical: 10,
           borderRadius: 5,
-          marginLeft: 300,
+          justifyContent: 'center',
+          alignItems: 'center',
         }}>
         <Text>Tamam</Text>
       </TouchableOpacity>

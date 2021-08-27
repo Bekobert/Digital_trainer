@@ -207,18 +207,15 @@ const ThirdStage = ({navigation}) => {
             ))}
           </View>
         </ScrollView>
-        <View
-          style={{
-            flex: 2.5,
-            marginBottom: 10,
-          }}>
+        <View style={{margin: 10}}>
           <TouchableOpacity
             style={{
-              height: 40,
-              flex: 10,
+              alignSelf: 'flex-end',
               backgroundColor: '#d8801d',
-              marginLeft: 280,
-              margin: 5,
+              marginTop: 12,
+              marginBottom: 10,
+              paddingHorizontal: 10,
+              paddingVertical: 10,
               borderRadius: 5,
               justifyContent: 'center',
               alignItems: 'center',
