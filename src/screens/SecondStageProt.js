@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -140,22 +140,6 @@ const SecondStageProt = ({navigation}) => {
   const question = useSelector(state => state.question);
   const information = useSelector(state => state.information);
 
-  const {width: deviceWidth} = useWindowDimensions();
-
-  const [isModalVisible, setModalVisible] = useState(false);
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
-  const [isWModalVisible, setWModalVisible] = useState(false);
-  const toggleWModal = index => {
-    setWModalVisible(!isWModalVisible);
-  };
-
-  const [errorArr, seterrorArr] = useState([]);
-
-  // const [Items, setItems] = useState([]);
-  // const [fixindex, setfixindex] = useState(0);
-
   const defaultNumberOptionValues = information
     .filter(info => info.optionsType === 'Number')
     .map(info => ({_id: info._id, value: ''}));
@@ -178,7 +162,6 @@ const SecondStageProt = ({navigation}) => {
       );
 
       newNumberOptions[foundIndex].value = newValue;
-      console.log('🪲 - newNumberOptions', newNumberOptions);
       setNumberOptionValues(newNumberOptions);
     };
 
@@ -211,7 +194,6 @@ const SecondStageProt = ({navigation}) => {
       );
 
       newDropdownOptions[foundIndex].value = newSelectedItems;
-      console.log('🪲 - newDropdownOptions', newDropdownOptions);
       setDropdownOptionValues(newDropdownOptions);
     };
 
@@ -268,6 +250,44 @@ const SecondStageProt = ({navigation}) => {
     );
   };
 
+  const onPressOkey = () => {
+    const errors = [];
+
+    numberOptionValues.map(numberOption => {
+      const foundInformation = information.find(
+        info => info._id === numberOption._id,
+      );
+      if (foundInformation?.correctAnswer !== numberOption.value)
+        errors.push({infoId: numberOption._id, ...foundInformation?.error});
+    });
+
+    dropdownOptionValues.map(dropdownOption => {
+      const foundInformation = information.find(
+        info => info._id === dropdownOption._id,
+      );
+      console.log(foundInformation?.correctAnswer);
+      const parsedCorrectAnswer = JSON.parse(
+        foundInformation?.correctAnswer || '[]',
+      );
+
+      if (parsedCorrectAnswer.length !== dropdownOption.value.length) {
+        errors.push({infoId: dropdownOption._id, ...foundInformation?.error});
+        return;
+      }
+
+      let isCorrect = true;
+      parsedCorrectAnswer.forEach(oneCorrectAnswer => {
+        if (!dropdownOption.value.includes(oneCorrectAnswer)) isCorrect = false;
+      });
+
+      if (!isCorrect)
+        errors.push({infoId: dropdownOption._id, ...foundInformation?.error});
+    });
+
+    if (errors.length > 0) navigation.navigate('ErrorPanel', {errors});
+    // navigation.navigate('ErrorPanel', {errors});
+  };
+
   return (
     <LinearGradient colors={colorpurp} style={styles.linearGradient}>
       <SafeAreaView style={{flex: 1}}>
@@ -303,43 +323,6 @@ const SecondStageProt = ({navigation}) => {
 
           <View style={{marginTop: 20}}>{information.map(renderInfo)}</View>
 
-          {/* <View style={{marginTop: 20}}>
-            {information.map((information, index) => (
-              <View
-                key={information?._id}
-                style={{flexDirection: 'row', flex: 0.1}}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setfixindex(index);
-                    toggleModal();
-                  }}
-                  style={{
-                    flex: 5,
-                    flexDirection: 'row',
-                    backgroundColor: '#e0e0e0',
-                    borderRadius: 5,
-                    margin: 10,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <View
-                    style={{
-                      paddingVertical: 6,
-                      flex: 0.5,
-                      margin: 5,
-                      backgroundColor: 'transparent',
-                      borderRadius: 2,
-                      borderWidth: 2,
-                      borderColor: 'green',
-                    }}></View>
-                  <Text style={{flex: 15, fontSize: 17, marginLeft: 10}}>
-                    {information?.text}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </View> */}
-
           <TouchableOpacity
             style={{
               alignSelf: 'flex-end',
@@ -352,68 +335,13 @@ const SecondStageProt = ({navigation}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}
-            onPress={() => {
-              information.forEach(info => {
-                errorArr.push(info.text);
-              });
-
-              navigation.navigate('ErrorPanel');
-            }}>
+            onPress={onPressOkey}>
             <Text style={{color: '#e0e0e0', fontSize: 17, fontWeight: 'bold'}}>
               Tamam
             </Text>
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
-
-      <Modal
-        isVisible={isModalVisible}
-        animationInTiming={600}
-        animationOutTiming={1000}
-        onBackdropPress={() => setModalVisible(false)}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'transparent',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 50,
-          }}>
-          {/**TODO: add multi select */}
-        </View>
-      </Modal>
-
-      <Modal
-        isVisible={isWModalVisible}
-        animationInTiming={600}
-        animationOutTiming={1000}
-        onBackdropPress={() => setWModalVisible(false)}>
-        <View
-          style={{
-            flex: 0.3,
-            backgroundColor: '#e0e0e0',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 50,
-          }}>
-          <View
-            style={{
-              backgroundColor: '#B22222',
-              padding: 30,
-              borderRadius: 50,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text
-              style={{
-                fontSize: 30,
-                fontWeight: 'bold',
-                marginBottom: 20,
-                color: '#e0e0e0',
-              }}></Text>
-          </View>
-        </View>
-      </Modal>
     </LinearGradient>
   );
 };

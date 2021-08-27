@@ -37,20 +37,28 @@ export default function Navigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="Stage2"
         screenOptions={{
           headerShown: false,
           headerMode: 'screen',
           headerTintColor: 'white',
           headerStyle: {backgroundColor: 'tomato'},
         }}>
-        <Stack.Screen name="ErrorPanel" component={ErrorPanel} />
+        <Stack.Screen
+          name="ErrorPanel"
+          component={ErrorPanel}
+          options={{presentation: 'modal'}}
+        />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Stage1" component={FirstStage} />
         <Stack.Screen name="Stage2" component={SecondStageProt} />
         <Stack.Screen name="Stage3" component={ThirdStage} />
         <Stack.Screen name="Stage4" component={LastStage} />
-        <Stack.Screen name="ErrorPanel2" component={ErrorPanel2} />
+        <Stack.Screen
+          name="ErrorPanel2"
+          component={ErrorPanel2}
+          options={{presentation: 'modal'}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

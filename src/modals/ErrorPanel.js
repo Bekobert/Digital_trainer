@@ -1,21 +1,49 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, ScrollView, TouchableOpacity, Image} from 'react-native';
+import {URL} from 'react-native-url-polyfill';
+import WebView from 'react-native-webview';
 
 //const errors = ['a', 'b', 'c', 'd'];
 import {useSelector} from 'react-redux';
 
-const errorImage = [
-  require('../images/9lukKesir.png'),
-  require('../images/16lıkKesir.png'),
-  require('../images/KesirGösterim.png'),
-  require('../images/Soru2Image.png'),
-];
-
-const ErrorPanel = ({navigation}) => {
+const ErrorPanel = ({navigation, route}) => {
   const information = useSelector(state => state.information);
 
-  const renderInfo = (info, index) => {
-    const {_id, text, optionsType, dropdownOptions, error} = info;
+  const {errors} = route.params;
+
+  const renderError = err => {
+    const {infoId, _id, text, image} = err;
+
+    const info = information.find(info => info._id === infoId);
+    const {text: infoText} = info;
+
+    const renderErrorImage = () => {
+      const imageUrl = new URL(image);
+      const splittedImagePath = imageUrl.pathname.split('.');
+      const imageType = splittedImagePath[splittedImagePath.length - 1];
+
+      return imageType === 'svg' ? (
+        <WebView
+          scalesPageToFit={false}
+          originWhitelist={['*']}
+          domStorageEnabled={true}
+          source={{uri: image}}
+          style={{
+            width: 250,
+            height: 250,
+          }}
+        />
+      ) : (
+        <Image
+          source={{uri: image}}
+          resizeMode="contain"
+          style={{
+            width: 250,
+            height: 250,
+          }}
+        />
+      );
+    };
 
     return (
       <View
@@ -38,22 +66,15 @@ const ErrorPanel = ({navigation}) => {
           elevation: 10,
         }}>
         <View style={{margin: 20}}>
-          <Text style={{fontWeight: 'bold'}}>{text}</Text>
+          <Text style={{fontWeight: 'bold'}}>{infoText}</Text>
         </View>
-        <Image
-          source={errorImage[index]}
-          resizeMode="contain"
-          style={{
-            width: 250,
-            height: 250,
-          }}
-        />
+        {image && renderErrorImage()}
         <Text
           style={{
             padding: 8,
             borderRadius: 5,
           }}>
-          {error.text}
+          {text}
         </Text>
       </View>
     );
@@ -72,7 +93,7 @@ const ErrorPanel = ({navigation}) => {
           backgroundColor: 'transparent',
           borderRadius: 10,
         }}>
-        {information.map(renderInfo)}
+        {errors.map(renderError)}
       </View>
       <TouchableOpacity
         onPress={() => navigation.navigate('Stage3')}
