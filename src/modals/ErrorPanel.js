@@ -28,6 +28,7 @@ const ErrorPanel = ({navigation, route}) => {
           originWhitelist={['*']}
           domStorageEnabled={true}
           source={{uri: image}}
+          androidHardwareAccelerationDisabled
           style={{
             width: 250,
             height: 250,
