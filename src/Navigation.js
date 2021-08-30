@@ -51,8 +51,19 @@ export default function Navigation() {
         />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Stage1" component={FirstStage} />
-        <Stack.Screen name="Stage2" component={SecondStageProt} />
-        <Stack.Screen name="Stage3" component={ThirdStage} />
+        <Stack.Screen
+          name="Stage2"
+          component={SecondStageProt}
+          initialParams={{
+            variableName: 'information',
+            otherVariableName: 'constraints',
+          }}
+        />
+        <Stack.Screen
+          name="Stage3"
+          component={SecondStageProt}
+          initialParams={{variableName: 'constraints'}}
+        />
         <Stack.Screen name="Stage4" component={LastStage} />
         <Stack.Screen
           name="ErrorPanel2"

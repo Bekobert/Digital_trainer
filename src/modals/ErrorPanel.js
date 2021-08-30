@@ -7,15 +7,14 @@ import WebView from 'react-native-webview';
 import {useSelector} from 'react-redux';
 
 const ErrorPanel = ({navigation, route}) => {
-  const information = useSelector(state => state.information);
-
-  const {errors} = route.params;
+  const {errors, nextPage, variableName} = route.params;
+  const variable = useSelector(state => state[variableName]);
 
   const renderError = err => {
     const {infoId, _id, text, image} = err;
 
-    const info = information.find(info => info._id === infoId);
-    const {text: infoText} = info;
+    const info = variable.find(info => info._id === infoId);
+    const {text: variableText} = info;
 
     const renderErrorImage = () => {
       const imageUrl = new URL(image);
@@ -67,7 +66,7 @@ const ErrorPanel = ({navigation, route}) => {
           elevation: 10,
         }}>
         <View style={{margin: 20}}>
-          <Text style={{fontWeight: 'bold'}}>{infoText}</Text>
+          <Text style={{fontWeight: 'bold'}}>{variableText}</Text>
         </View>
         {image && renderErrorImage()}
         <Text
@@ -97,7 +96,7 @@ const ErrorPanel = ({navigation, route}) => {
         {errors.map(renderError)}
       </View>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Stage3')}
+        onPress={() => navigation.navigate(nextPage)}
         style={{
           alignSelf: 'flex-end',
           backgroundColor: '#d8801d',

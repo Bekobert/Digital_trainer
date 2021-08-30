@@ -9,6 +9,7 @@ import {
   ScrollView,
   Animated,
   Easing,
+  SafeAreaView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import FlipCard from 'react-native-flip-card';
@@ -65,13 +66,16 @@ const colorpurp = ['#1d0a28', '#390d4f', '#6b1e72'];
 const correct = [1, 3];
 
 const FirstStage = ({navigation}) => {
-  const [s1color, sets1color] = useState({borderColor: '#cfbc22'});
-  const [s2color, sets2color] = useState({borderColor: '#cfbc22'});
-  const [s3color, sets3color] = useState({borderColor: '#cfbc22'});
-  const [s4color, sets4color] = useState({borderColor: '#cfbc22'});
+  // const [s1color, sets1color] = useState({borderColor: '#cfbc22'});
+  // const [s2color, sets2color] = useState({borderColor: '#cfbc22'});
+  // const [s3color, sets3color] = useState({borderColor: '#cfbc22'});
+  // const [s4color, sets4color] = useState({borderColor: '#cfbc22'});
 
   const question = useSelector(state => state.question);
   const subjects = useSelector(state => state.subjects);
+
+  const information = useSelector(state => state.information);
+  const constraints = useSelector(state => state.constraints);
 
   const [selectedIndexes, setselectedIndexes] = useState([]);
 
@@ -83,8 +87,16 @@ const FirstStage = ({navigation}) => {
 
   const [isRModalVisible, setRModalVisible] = useState(false);
 
-  const toggleRModal = () => {
-    setRModalVisible(!isRModalVisible);
+  const openRModal = () => {
+    setRModalVisible(true);
+
+    setTimeout(() => {
+      setRModalVisible(false);
+
+      if (information.length > 0) navigation.navigate('Stage2');
+      else if (constraints.length > 0) navigation.navigate('Stage3');
+      else navigation.navigate('Stage4');
+    }, 1000);
   };
   /*<View style={[styles.stages, s1color]} />
             <View style={[styles.stages, s2color]} />
@@ -110,16 +122,16 @@ const FirstStage = ({navigation}) => {
 
   const [errors, setErrors] = useState([]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      toggleRModal();
-      navigation.navigate('Stage2');
-    }, 3000);
-  }, [isRModalVisible, true]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     toggleRModal();
+  //     navigation.navigate('Stage2');
+  //   }, 3000);
+  // }, [isRModalVisible, true]);
 
   return (
-    <>
-      <LinearGradient colors={colorpurp} style={styles.linearGradient}>
+    <LinearGradient colors={colorpurp} style={styles.linearGradient}>
+      <SafeAreaView style={{flex: 1}}>
         <ScrollView>
           <View style={styles.stager}>
             <ProgressSteps topOffset={0} marginBottom={0}>
@@ -274,7 +286,7 @@ const FirstStage = ({navigation}) => {
                   selectedIndexes.length ===
                   subjects.filter(subject => subject.isCorrect).length
                 ) {
-                  toggleRModal();
+                  openRModal();
                 } else {
                   setErrors(['Eksik işaretlediniz! Dikkatli seçim yapın.']);
                   toggleModal();
@@ -284,85 +296,81 @@ const FirstStage = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </ScrollView>
-      </LinearGradient>
-      <Modal
-        isVisible={isModalVisible}
-        animationInTiming={600}
-        animationOutTiming={1000}
-        onBackdropPress={() => setModalVisible(false)}>
-        <View
-          style={{
-            backgroundColor: '#e0e0e0',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 50,
-          }}>
+        <Modal
+          isVisible={isModalVisible}
+          animationInTiming={600}
+          animationOutTiming={1000}
+          onBackdropPress={() => setModalVisible(false)}>
           <View
             style={{
-              backgroundColor: '#B22222',
-              padding: 30,
+              backgroundColor: '#e0e0e0',
+              justifyContent: 'center',
+              alignItems: 'center',
               borderRadius: 50,
-              justifyContent: 'center',
-              alignItems: 'center',
             }}>
-            <Text
+            <View
               style={{
-                fontSize: 30,
-                fontWeight: 'bold',
-                marginBottom: 20,
-                color: '#e0e0e0',
+                backgroundColor: '#B22222',
+                padding: 30,
+                borderRadius: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
-              Yanlış Seçenek!
-            </Text>
-            <Text
-              style={{
-                fontSize: 20,
-              }}>
-              {errors.join('\n')}
-            </Text>
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontWeight: 'bold',
+                  marginBottom: 20,
+                  color: '#e0e0e0',
+                }}>
+                Yanlış Seçenek!
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                }}>
+                {errors.join('\n')}
+              </Text>
+            </View>
           </View>
-        </View>
-      </Modal>
-      <Modal
-        isVisible={isRModalVisible}
-        animationInTiming={600}
-        animationOutTiming={1000}
-        onBackdropPress={() => {
-          setRModalVisible(false);
-          navigation.navigate('Stage2');
-        }}>
-        <View
-          style={{
-            flex: 0.5,
-            backgroundColor: '#e0e0e0',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 20,
-          }}>
+        </Modal>
+        <Modal
+          isVisible={isRModalVisible}
+          animationInTiming={600}
+          animationOutTiming={1000}>
           <View
             style={{
-              backgroundColor: '#228B22',
-              padding: 80,
-              marginHorizontal: 10,
-              borderRadius: 20,
+              flex: 0.5,
+              backgroundColor: '#e0e0e0',
               justifyContent: 'center',
               alignItems: 'center',
-              overflow: 'hidden',
+              borderRadius: 20,
             }}>
-            <Text
+            <View
               style={{
-                fontSize: 30,
-                fontWeight: 'bold',
-                marginBottom: 20,
-                color: '#e0e0e0',
+                backgroundColor: '#228B22',
+                padding: 80,
+                marginHorizontal: 10,
+                borderRadius: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+                overflow: 'hidden',
               }}>
-              Doğru Cevap!
-            </Text>
-            <Text style={{fontSize: 20}}>Bu soru ve ile ilgili.</Text>
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontWeight: 'bold',
+                  marginBottom: 20,
+                  color: '#e0e0e0',
+                }}>
+                Doğru Cevap!
+              </Text>
+              <Text style={{fontSize: 20}}>Bu soru ve ile ilgili.</Text>
+            </View>
           </View>
-        </View>
-      </Modal>
-    </>
+        </Modal>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 

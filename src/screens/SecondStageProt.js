@@ -136,18 +136,23 @@ const colorpurp = ['#1d0a28', '#390d4f', '#6b1e72'];
 // ];
 // const corrects = [0, 1, 3, 2];
 
-const SecondStageProt = ({navigation}) => {
-  const question = useSelector(state => state.question);
-  const information = useSelector(state => state.information);
+const SecondStageProt = ({navigation, route}) => {
+  const {variableName, otherVariableName} = route.params;
 
-  const defaultNumberOptionValues = information
+  const question = useSelector(state => state.question);
+  const variable = useSelector(state => state[variableName]);
+  const otherVariable = otherVariableName
+    ? useSelector(state => state[otherVariableName])
+    : [];
+
+  const defaultNumberOptionValues = variable
     .filter(info => info.optionsType === 'Number')
     .map(info => ({_id: info._id, value: ''}));
   const [numberOptionValues, setNumberOptionValues] = useState(
     defaultNumberOptionValues,
   );
 
-  const defaultDropdownOptionValues = information
+  const defaultDropdownOptionValues = variable
     .filter(info => info.optionsType === 'Dropdown')
     .map(info => ({_id: info._id, value: []}));
   const [dropdownOptionValues, setDropdownOptionValues] = useState(
@@ -254,7 +259,7 @@ const SecondStageProt = ({navigation}) => {
     const errors = [];
 
     numberOptionValues.map(numberOption => {
-      const foundInformation = information.find(
+      const foundInformation = variable.find(
         info => info._id === numberOption._id,
       );
       if (foundInformation?.correctAnswer !== numberOption.value)
@@ -262,7 +267,7 @@ const SecondStageProt = ({navigation}) => {
     });
 
     dropdownOptionValues.map(dropdownOption => {
-      const foundInformation = information.find(
+      const foundInformation = variable.find(
         info => info._id === dropdownOption._id,
       );
       console.log(foundInformation?.correctAnswer);
@@ -284,8 +289,10 @@ const SecondStageProt = ({navigation}) => {
         errors.push({infoId: dropdownOption._id, ...foundInformation?.error});
     });
 
-    if (errors.length > 0) navigation.navigate('ErrorPanel', {errors});
-    // navigation.navigate('ErrorPanel', {errors});
+    const nextPage = otherVariable.length > 0 ? 'Stage3' : 'Stage4';
+    if (errors.length > 0)
+      navigation.navigate('ErrorPanel', {errors, nextPage, variableName});
+    else navigation.navigate(nextPage);
   };
 
   return (
@@ -293,13 +300,14 @@ const SecondStageProt = ({navigation}) => {
       <SafeAreaView style={{flex: 1}}>
         <ScrollView contentContainerStyle={{paddingHorizontal: 20}}>
           <View style={styles.stager}>
-            <ProgressSteps topOffset={0} marginBottom={0} activeStep={1}>
-              <ProgressStep label="Soru Türü"></ProgressStep>
-              <ProgressStep
-                removeBtnRow={true}
-                label="Değişkenler"></ProgressStep>
-              <ProgressStep label="Kısıtlar"></ProgressStep>
-              <ProgressStep label="Çözüm"></ProgressStep>
+            <ProgressSteps
+              topOffset={0}
+              marginBottom={0}
+              activeStep={variableName === 'information' ? 1 : 2}>
+              <ProgressStep label="Soru Türü" removeBtnRow></ProgressStep>
+              <ProgressStep removeBtnRow label="Değişkenler"></ProgressStep>
+              <ProgressStep label="Kısıtlar" removeBtnRow></ProgressStep>
+              <ProgressStep label="Çözüm" removeBtnRow></ProgressStep>
             </ProgressSteps>
           </View>
 
@@ -321,7 +329,7 @@ const SecondStageProt = ({navigation}) => {
             />
           </View>
 
-          <View style={{marginTop: 20}}>{information.map(renderInfo)}</View>
+          <View style={{marginTop: 20}}>{variable.map(renderInfo)}</View>
 
           <TouchableOpacity
             style={{
