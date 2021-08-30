@@ -110,6 +110,13 @@ const FirstStage = ({navigation}) => {
 
   const [errors, setErrors] = useState([]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      toggleRModal();
+      navigation.navigate('Stage2');
+    }, 3000);
+  }, [isRModalVisible, true]);
+
   return (
     <>
       <LinearGradient colors={colorpurp} style={styles.linearGradient}>

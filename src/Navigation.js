@@ -37,7 +37,7 @@ export default function Navigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Stage2"
+        initialRouteName="Home"
         screenOptions={{
           headerShown: false,
           headerMode: 'screen',
