@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -10,6 +10,7 @@ import {
   ScrollView,
   Dimensions,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -62,23 +63,28 @@ const HomeScreen = ({navigation}) => {
   const answers = useSelector(state => state.answers);
 
   const [isRModalVisible, setRModalVisible] = useState(false);
-
   const toggleRModal = () => {
     setRModalVisible(!isRModalVisible);
   };
-
   const [isWModalVisible, setWModalVisible] = useState(false);
-
   const toggleWModal = () => {
     setWModalVisible(!isWModalVisible);
   };
 
-  const {width, height} = Dimensions.get('window');
+  const [imageHeight, setImageHeight] = useState(0);
+
+  const {width: deviceWidth} = Dimensions.get('window');
+  const ImageWidth = (deviceWidth - 20) * 0.9;
+  useEffect(() => {
+    Image.getSize(question?.image, (imgWidth, imgHeight) => {
+      setImageHeight(ImageWidth * (imgHeight / imgWidth));
+    });
+  }, [question?.image, deviceWidth]);
 
   return (
     <LinearGradient colors={colorpurp} style={styles.linearGradient}>
       <SafeAreaView style={{flex: 1}}>
-        <ScrollView style={{flex: 1}}>
+        <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
           <TouchableOpacity
             style={styles.hints}
             onPress={() => navigation.navigate('Stage1')}>
@@ -91,9 +97,9 @@ const HomeScreen = ({navigation}) => {
                 fontSize: 17,
                 fontWeight: 'bold',
                 color: 'white',
+                marginLeft: 12,
               }}>
-              {'   '}
-              Nasıl Çözerim{' '}
+              Nasıl Çözerim
             </Text>
           </TouchableOpacity>
           <View
@@ -105,29 +111,30 @@ const HomeScreen = ({navigation}) => {
               padding: 10,
               margin: 10,
               marginTop: 20,
-              borderBottomWidth: 2,
-              borderTopWidth: 2,
-              borderColor: 'black',
-              borderBottomLeftRadius: 50,
-              borderTopRightRadius: 50,
+              borderRadius: 10,
               shadowColor: 'white',
               shadowOffset: {
                 width: 0,
-                height: 15,
+                height: 3,
               },
-              shadowOpacity: 0.55,
-              shadowRadius: 16.0,
-              elevation: 28,
+              shadowOpacity: 0.27,
+              shadowRadius: 4.65,
+
+              elevation: 6,
             }}>
-            <Image
-              source={{uri: question?.image}}
-              resizeMode="stretch"
-              style={{
-                width: '90%',
-                height: 250,
-                borderRadius: 10,
-              }}
-            />
+            {imageHeight > 0 ? (
+              <Image
+                source={{uri: question?.image}}
+                resizeMode="contain"
+                style={{
+                  width: ImageWidth,
+                  height: imageHeight,
+                  borderRadius: 10,
+                }}
+              />
+            ) : (
+              <ActivityIndicator size="large" color="#318CE7" />
+            )}
           </View>
           <View
             style={{
@@ -210,22 +217,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f8801d',
-    margin: 1,
-    borderRadius: 20,
+    borderRadius: 10,
+    paddingVertical: 5,
   },
   buttonsS: {
     flex: 8,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
-    margin: 1,
-    borderRadius: 20,
+    borderRadius: 10,
+    paddingVertical: 5,
   },
   buttons: {
     flex: 2,
     flexDirection: 'row',
     marginBottom: 15,
-    borderRadius: 30,
+    borderRadius: 10,
     backgroundColor: '#f5f5f5',
   },
 });

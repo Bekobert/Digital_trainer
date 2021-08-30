@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, Text, ScrollView, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  SafeAreaView,
+} from 'react-native';
 import {URL} from 'react-native-url-polyfill';
 import WebView from 'react-native-webview';
 
@@ -85,32 +92,34 @@ const ErrorPanel = ({navigation, route}) => {
       contentContainerStyle={{
         justifyContent: 'center',
       }}>
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          margin: 10,
-          backgroundColor: 'transparent',
-          borderRadius: 10,
-        }}>
-        {errors.map(renderError)}
-      </View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate(nextPage)}
-        style={{
-          alignSelf: 'flex-end',
-          backgroundColor: '#d8801d',
-          marginTop: 12,
-          marginBottom: 10,
-          marginHorizontal: 10,
-          paddingHorizontal: 10,
-          paddingVertical: 10,
-          borderRadius: 5,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text>Tamam</Text>
-      </TouchableOpacity>
+      <SafeAreaView>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin: 10,
+            backgroundColor: 'transparent',
+            borderRadius: 10,
+          }}>
+          {errors.map(renderError)}
+        </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate(nextPage)}
+          style={{
+            alignSelf: 'flex-end',
+            backgroundColor: '#d8801d',
+            marginTop: 12,
+            marginBottom: 10,
+            marginHorizontal: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 10,
+            borderRadius: 5,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text>Tamam</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
     </ScrollView>
   );
 };

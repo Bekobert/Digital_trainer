@@ -96,19 +96,16 @@ const LastStage = ({navigation}) => {
               padding: 10,
               margin: 10,
               marginTop: 20,
-              borderBottomWidth: 2,
-              borderTopWidth: 2,
-              borderColor: 'black',
-              borderBottomLeftRadius: 50,
-              borderTopRightRadius: 50,
+              borderRadius: 10,
               shadowColor: 'white',
               shadowOffset: {
                 width: 0,
-                height: 15,
+                height: 3,
               },
-              shadowOpacity: 0.55,
-              shadowRadius: 16.0,
-              elevation: 28,
+              shadowOpacity: 0.27,
+              shadowRadius: 4.65,
+
+              elevation: 6,
             }}>
             <Image
               source={{uri: question?.image}}
@@ -122,10 +119,9 @@ const LastStage = ({navigation}) => {
           </View>
           <View
             style={{
-              flex: 8,
               flexDirection: 'column',
-              padding: 10,
               marginTop: 20,
+              padding: 10,
             }}>
             {answers.map(answer => (
               <TouchableOpacity
@@ -144,7 +140,7 @@ const LastStage = ({navigation}) => {
                   }
                 }}>
                 <View style={styles.buttonsR}>
-                  <Text style={styles.texts}>{answer?.option}.</Text>
+                  <Text style={{fontSize: 17}}>{answer?.option}.</Text>
                 </View>
                 <View style={styles.buttonsS}>
                   <Text style={{fontSize: 17}}>{answer?.text}</Text>
@@ -154,6 +150,7 @@ const LastStage = ({navigation}) => {
           </View>
         </ScrollView>
       </SafeAreaView>
+
       <Modal
         isVisible={isWModalVisible}
         animationInTiming={600}
@@ -211,24 +208,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
-    margin: 2,
     marginRight: 10,
-    marginLeft: 10,
-    borderRadius: 20,
+
+    paddingVertical: 5,
+    borderRadius: 10,
   },
   buttonsS: {
     flex: 8,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
-    margin: 2,
-    borderRadius: 20,
+
+    paddingVertical: 5,
+    borderRadius: 10,
   },
   buttons: {
-    flex: 2,
     flexDirection: 'row',
-    margin: 5,
-    borderRadius: 30,
+    marginBottom: 20,
   },
 });
 

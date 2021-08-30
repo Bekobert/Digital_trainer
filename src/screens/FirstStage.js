@@ -164,8 +164,8 @@ const FirstStage = ({navigation}) => {
                 alignItems: 'center',
                 backgroundColor: 'white',
                 padding: 10,
-                margin: 5,
-                borderRadius: 40,
+                margin: 10,
+                borderRadius: 10,
                 //maxWidth: 150,
               }}>
               <Image
@@ -201,11 +201,12 @@ const FirstStage = ({navigation}) => {
               </Text>
             </View>
           </FlipCard>
+
           <View
             style={{
-              flex: 0.8,
               flexDirection: 'column',
-              padding: 10,
+              marginTop: 24,
+              paddingHorizontal: 10,
             }}>
             {subjects.map((subject, index) => (
               <TouchableOpacity
@@ -214,6 +215,7 @@ const FirstStage = ({navigation}) => {
                   styles.buttons,
                   {
                     borderWidth: 4,
+                    borderRadius: 15,
                     borderColor: selectedIndexes.includes(index)
                       ? 'green'
                       : 'transparent',
@@ -410,17 +412,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonsS: {
-    flex: 8,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     //backgroundColor: '#f5f5f5',
-    borderRadius: 20,
+    paddingVertical: 5,
+    borderRadius: 10,
   },
   buttons: {
     flex: 1,
     flexDirection: 'row',
-    margin: 5,
-    borderRadius: 30,
+    marginBottom: 10,
   },
 });
 
