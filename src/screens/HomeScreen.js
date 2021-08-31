@@ -84,7 +84,9 @@ const HomeScreen = ({navigation}) => {
   return (
     <LinearGradient colors={colorpurp} style={styles.linearGradient}>
       <SafeAreaView style={{flex: 1}}>
-        <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={{justifyContent: 'center'}}
+          showsVerticalScrollIndicator={false}>
           <TouchableOpacity
             style={styles.hints}
             onPress={() => navigation.navigate('Stage1')}>
@@ -112,7 +114,7 @@ const HomeScreen = ({navigation}) => {
               margin: 10,
               marginTop: 20,
               borderRadius: 10,
-              shadowColor: 'white',
+              shadowColor: 'black',
               shadowOffset: {
                 width: 0,
                 height: 3,
@@ -120,7 +122,7 @@ const HomeScreen = ({navigation}) => {
               shadowOpacity: 0.27,
               shadowRadius: 4.65,
 
-              elevation: 6,
+              elevation: 10,
             }}>
             {imageHeight > 0 ? (
               <Image
@@ -200,9 +202,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   hints: {
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: 'black',
     flex: 1,
+    height: 30,
     flexDirection: 'row',
     backgroundColor: '#50C878',
     marginRight: 50,

@@ -9,7 +9,9 @@ import {
   ScrollView,
   Animated,
   Easing,
+  Dimensions,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import FlipCard from 'react-native-flip-card';
@@ -116,7 +118,7 @@ const FirstStage = ({navigation}) => {
 
   const boxInterpolation = selVal.interpolate({
     inputRange: [0, 1],
-    outputRange: ['#f5f5f5', '#ffe4b2'],
+    outputRange: ['#f5f5f5', '#ffd4a2'],
   });
   const animatedStyle = boxInterpolation;
 
@@ -128,6 +130,16 @@ const FirstStage = ({navigation}) => {
   //     navigation.navigate('Stage2');
   //   }, 3000);
   // }, [isRModalVisible, true]);
+
+  const [imageHeight, setImageHeight] = useState(0);
+
+  const {width: deviceWidth} = Dimensions.get('window');
+  const ImageWidth = (deviceWidth - 20) * 0.9;
+  useEffect(() => {
+    Image.getSize(question?.image, (imgWidth, imgHeight) => {
+      setImageHeight(ImageWidth * (imgHeight / imgWidth));
+    });
+  }, [question?.image, deviceWidth]);
 
   return (
     <LinearGradient colors={colorpurp} style={styles.linearGradient}>
@@ -160,25 +172,38 @@ const FirstStage = ({navigation}) => {
             }}>
             <View
               style={{
+                flex: 10,
                 justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor: 'white',
                 padding: 10,
                 margin: 10,
+                marginTop: 20,
                 borderRadius: 10,
-                //maxWidth: 150,
-              }}>
-              <Image
-                source={{uri: question?.image}}
-                resizeMode="stretch"
-                style={{
-                  width: '95%',
-                  height: 250,
-                  borderRadius: 10,
-                }}
-              />
-            </View>
+                shadowColor: 'white',
+                shadowOffset: {
+                  width: 0,
+                  height: 3,
+                },
+                shadowOpacity: 0.27,
+                shadowRadius: 4.65,
 
+                elevation: 6,
+              }}>
+              {imageHeight > 0 ? (
+                <Image
+                  source={{uri: question?.image}}
+                  resizeMode="contain"
+                  style={{
+                    width: ImageWidth,
+                    height: imageHeight,
+                    borderRadius: 10,
+                  }}
+                />
+              ) : (
+                <ActivityIndicator size="large" color="#318CE7" />
+              )}
+            </View>
             <View
               style={{
                 justifyContent: 'center',
@@ -305,16 +330,16 @@ const FirstStage = ({navigation}) => {
           onBackdropPress={() => setModalVisible(false)}>
           <View
             style={{
-              backgroundColor: '#e0e0e0',
+              //backgroundColor: '#e0e0e0',
               justifyContent: 'center',
               alignItems: 'center',
-              borderRadius: 50,
+              borderRadius: 10,
             }}>
             <View
               style={{
                 backgroundColor: '#B22222',
                 padding: 30,
-                borderRadius: 50,
+                borderRadius: 10,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -342,18 +367,16 @@ const FirstStage = ({navigation}) => {
           animationOutTiming={1000}>
           <View
             style={{
-              flex: 0.5,
-              backgroundColor: '#e0e0e0',
+              //backgroundColor: '#e0e0e0',
               justifyContent: 'center',
               alignItems: 'center',
-              borderRadius: 20,
+              borderRadius: 10,
             }}>
             <View
               style={{
                 backgroundColor: '#228B22',
-                padding: 80,
-                marginHorizontal: 10,
-                borderRadius: 20,
+                padding: 60,
+                borderRadius: 10,
                 justifyContent: 'center',
                 alignItems: 'center',
                 overflow: 'hidden',
@@ -362,12 +385,11 @@ const FirstStage = ({navigation}) => {
                 style={{
                   fontSize: 30,
                   fontWeight: 'bold',
-                  marginBottom: 20,
+                  //marginBottom: 20,
                   color: '#e0e0e0',
                 }}>
                 Doğru Cevap!
               </Text>
-              <Text style={{fontSize: 20}}>Bu soru ve ile ilgili.</Text>
             </View>
           </View>
         </Modal>

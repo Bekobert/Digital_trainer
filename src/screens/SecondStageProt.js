@@ -8,7 +8,9 @@ import {
   StyleSheet,
   SafeAreaView,
   useWindowDimensions,
+  Dimensions,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -139,6 +141,10 @@ const colorpurp = ['#1d0a28', '#390d4f', '#6b1e72'];
 const SecondStageProt = ({navigation, route}) => {
   const {variableName, otherVariableName} = route.params;
 
+  const [errs, seterrs] = useState([]);
+
+  const [isRModalVisible, setRModalVisible] = useState(false);
+
   const question = useSelector(state => state.question);
   const variable = useSelector(state => state[variableName]);
   const otherVariable = otherVariableName
@@ -180,9 +186,9 @@ const SecondStageProt = ({navigation, route}) => {
         keyboardType="number-pad"
         style={{
           width: 100,
-          height: '100%',
+          height: '77%',
           backgroundColor: 'white',
-          borderRadius: 5,
+          borderRadius: 10,
           paddingHorizontal: 8,
         }}
       />
@@ -216,6 +222,7 @@ const SecondStageProt = ({navigation, route}) => {
         }
         hideTags
         hideSubmitButton
+        styleDropdownMenu={{borderRadius: 10}}
         iconSearch={false}
         searchInputPlaceholderText=""
         selectText=""
@@ -227,6 +234,16 @@ const SecondStageProt = ({navigation, route}) => {
   const renderInfo = info => {
     const {_id, text, optionsType, dropdownOptions} = info;
 
+    const [imageHeight, setImageHeight] = useState(0);
+
+    const {width: deviceWidth} = Dimensions.get('window');
+    const ImageWidth = (deviceWidth - 20) * 0.9;
+    useEffect(() => {
+      Image.getSize(question?.image, (imgWidth, imgHeight) => {
+        setImageHeight(ImageWidth * (imgHeight / imgWidth));
+      });
+    }, [question?.image, deviceWidth]);
+
     return (
       <View
         key={_id}
@@ -236,8 +253,19 @@ const SecondStageProt = ({navigation, route}) => {
           justifyContent: 'space-between',
           marginVertical: 8,
         }}>
+        <View
+          style={{
+            borderWidth: 2,
+            borderColor: 'white',
+            borderRadius: 10,
+            width: 15,
+            height: 15,
+            padding: 6,
+            marginRight: 5,
+          }}></View>
         <Text
           style={{
+            flex: 1,
             flexShrink: 1,
             backgroundColor: 'white',
             padding: 8,
@@ -262,8 +290,10 @@ const SecondStageProt = ({navigation, route}) => {
       const foundInformation = variable.find(
         info => info._id === numberOption._id,
       );
-      if (foundInformation?.correctAnswer !== numberOption.value)
+      if (foundInformation?.correctAnswer !== numberOption.value) {
         errors.push({infoId: numberOption._id, ...foundInformation?.error});
+        errs.push(0);
+      } else errs.push(1);
     });
 
     dropdownOptionValues.map(dropdownOption => {
@@ -277,8 +307,9 @@ const SecondStageProt = ({navigation, route}) => {
 
       if (parsedCorrectAnswer.length !== dropdownOption.value.length) {
         errors.push({infoId: dropdownOption._id, ...foundInformation?.error});
+        errs.push(0);
         return;
-      }
+      } else errs.push(1);
 
       let isCorrect = true;
       parsedCorrectAnswer.forEach(oneCorrectAnswer => {
@@ -289,11 +320,30 @@ const SecondStageProt = ({navigation, route}) => {
         errors.push({infoId: dropdownOption._id, ...foundInformation?.error});
     });
 
-    const nextPage = otherVariable.length > 0 ? 'Stage3' : 'Stage4';
+    const nextPageN = otherVariable.length > 0 ? 'Stage3' : 'Stage4';
+    const nextPage = variableName === 'information' ? 'Stage2' : 'Stage3';
     if (errors.length > 0)
       navigation.navigate('ErrorPanel', {errors, nextPage, variableName});
-    else navigation.navigate(nextPage);
+    else {
+      setRModalVisible(true);
+      setTimeout(() => {
+        setRModalVisible(false);
+        navigation.navigate(nextPageN);
+      }, 2000);
+    }
+    console.log(errs);
+    seterrs([]);
   };
+
+  const [imageHeight, setImageHeight] = useState(0);
+
+  const {width: deviceWidth} = Dimensions.get('window');
+  const ImageWidth = (deviceWidth - 20) * 0.9;
+  useEffect(() => {
+    Image.getSize(question?.image, (imgWidth, imgHeight) => {
+      setImageHeight(ImageWidth * (imgHeight / imgWidth));
+    });
+  }, [question?.image, deviceWidth]);
 
   return (
     <LinearGradient colors={colorpurp} style={styles.linearGradient}>
@@ -313,20 +363,37 @@ const SecondStageProt = ({navigation, route}) => {
 
           <View
             style={{
+              flex: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
               backgroundColor: 'white',
-              borderRadius: 5,
-              overflow: 'hidden',
-              marginTop: 12,
-              paddingVertical: 20,
+              padding: 10,
+              //margin: 10,
+              marginTop: 20,
+              borderRadius: 10,
+              shadowColor: 'white',
+              shadowOffset: {
+                width: 0,
+                height: 3,
+              },
+              shadowOpacity: 0.27,
+              shadowRadius: 4.65,
+
+              elevation: 6,
             }}>
-            <Image
-              source={{uri: question?.image}}
-              resizeMode="contain"
-              style={{
-                width: '100%',
-                height: 250,
-              }}
-            />
+            {imageHeight > 0 ? (
+              <Image
+                source={{uri: question?.image}}
+                resizeMode="contain"
+                style={{
+                  width: ImageWidth,
+                  height: imageHeight,
+                  borderRadius: 10,
+                }}
+              />
+            ) : (
+              <ActivityIndicator size="large" color="#318CE7" />
+            )}
           </View>
 
           <View style={{marginTop: 20}}>{variable.map(renderInfo)}</View>
@@ -349,6 +416,38 @@ const SecondStageProt = ({navigation, route}) => {
             </Text>
           </TouchableOpacity>
         </ScrollView>
+        <Modal
+          isVisible={isRModalVisible}
+          animationInTiming={600}
+          animationOutTiming={1000}>
+          <View
+            style={{
+              //backgroundColor: '#e0e0e0',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 10,
+            }}>
+            <View
+              style={{
+                backgroundColor: '#228B22',
+                padding: 60,
+                borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                overflow: 'hidden',
+              }}>
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontWeight: 'bold',
+                  //marginBottom: 20,
+                  color: '#e0e0e0',
+                }}>
+                Doğru Cevap!
+              </Text>
+            </View>
+          </View>
+        </Modal>
       </SafeAreaView>
     </LinearGradient>
   );

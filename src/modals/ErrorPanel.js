@@ -88,39 +88,42 @@ const ErrorPanel = ({navigation, route}) => {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        justifyContent: 'center',
-      }}>
-      <SafeAreaView>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            margin: 10,
-            backgroundColor: 'transparent',
-            borderRadius: 10,
-          }}>
-          {errors.map(renderError)}
-        </View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate(nextPage)}
-          style={{
-            alignSelf: 'flex-end',
-            backgroundColor: '#d8801d',
-            marginTop: 12,
-            marginBottom: 10,
-            marginHorizontal: 10,
-            paddingHorizontal: 10,
-            paddingVertical: 10,
-            borderRadius: 5,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text>Tamam</Text>
-        </TouchableOpacity>
-      </SafeAreaView>
-    </ScrollView>
+    <View style={{flex: 1, backgroundColor: '#d0d0d0'}}>
+      <ScrollView
+        contentContainerStyle={{
+          justifyContent: 'center',
+          //backgroundColor: '#e0e0e0',
+        }}>
+        <SafeAreaView>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              margin: 10,
+              backgroundColor: 'transparent',
+              borderRadius: 10,
+            }}>
+            {errors.map(renderError)}
+          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate(nextPage)}
+            style={{
+              alignSelf: 'flex-end',
+              backgroundColor: '#d8801d',
+              marginTop: 12,
+              marginBottom: 10,
+              marginHorizontal: 10,
+              paddingHorizontal: 10,
+              paddingVertical: 10,
+              borderRadius: 5,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text>Tamam</Text>
+          </TouchableOpacity>
+        </SafeAreaView>
+      </ScrollView>
+    </View>
   );
 };
 
