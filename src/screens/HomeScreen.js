@@ -18,6 +18,8 @@ import Modal from 'react-native-modal';
 import RModal from '../modals/RightModal';
 import WModal from '../modals/WrongModal';
 import {useSelector} from 'react-redux';
+import useRedux from '../hooks/useRedux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const colorblue = ['#192f6a', '#4c669f', '#318CE7'];
 const colorblue3 = ['#005f69', '#4c669f', '#7FFFD4'];
@@ -59,8 +61,13 @@ const colorpurp = ['#1d0a28', '#390d4f', '#6b1e72'];
 // }
 
 const HomeScreen = ({navigation}) => {
+  const {dispatchAction, $} = useRedux();
   const question = useSelector(state => state.question);
   const answers = useSelector(state => state.answers);
+
+  useEffect(() => {
+    dispatchAction($.getRandomQuestion());
+  }, []);
 
   const [isRModalVisible, setRModalVisible] = useState(false);
   const toggleRModal = () => {
@@ -76,6 +83,8 @@ const HomeScreen = ({navigation}) => {
   const {width: deviceWidth} = Dimensions.get('window');
   const ImageWidth = (deviceWidth - 20) * 0.9;
   useEffect(() => {
+    if (!question?.image) return;
+
     Image.getSize(question?.image, (imgWidth, imgHeight) => {
       setImageHeight(ImageWidth * (imgHeight / imgWidth));
     });
@@ -124,7 +133,7 @@ const HomeScreen = ({navigation}) => {
 
               elevation: 10,
             }}>
-            {imageHeight > 0 ? (
+            {imageHeight > 0 && question?.image ? (
               <Image
                 source={{uri: question?.image}}
                 resizeMode="contain"

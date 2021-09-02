@@ -1,4 +1,5 @@
 import * as $ from './actionTypes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function setQuestionLoadingFlag(flagValue) {
   return {type: $.SET_QUESTION_LOADING_FLAG, payload: flagValue};
@@ -23,8 +24,20 @@ export function setAnswers(answers) {
 export function getRandomQuestion() {
   return async (dispatch, getState, api) => {
     try {
+      const rawSeenQuestionIds = await AsyncStorage.getItem(
+        'SEEN_QUESTION_IDS',
+      );
+      const seenQuestionIds = JSON.parse(rawSeenQuestionIds || '[]');
+      console.log('🪲 - seenQuestionIds', seenQuestionIds);
+
       const {question, subjects, variables, answers} =
-        await api.getRandomQuestion();
+        await api.getRandomQuestion(seenQuestionIds);
+
+      seenQuestionIds.push(question._id);
+      await AsyncStorage.setItem(
+        'SEEN_QUESTION_IDS',
+        JSON.stringify(seenQuestionIds),
+      );
 
       dispatch(setQuestion(question));
       dispatch(setSubjects(subjects));
@@ -40,7 +53,11 @@ export function getRandomQuestion() {
       );
       dispatch(setAnswers(answers));
     } catch (error) {
-      console.log(error);
+      dispatch(setQuestion(null));
+      dispatch(setSubjects([]));
+      dispatch(setInformation([]));
+      dispatch(setConstraints([]));
+      dispatch(setAnswers([]));
     }
 
     dispatch(setQuestionLoadingFlag(false));

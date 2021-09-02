@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, ActivityIndicator} from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
@@ -14,25 +14,24 @@ import SecondStageProt from './screens/SecondStageProt';
 import ErrorPanel from './modals/ErrorPanel';
 import ErrorPanel2 from './modals/ErrorPanel2';
 import LastStage from './screens/LastStage';
-import {useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 
 export default function Navigation() {
-  const {dispatchAction, $} = useRedux();
-
-  const questionLoading = useSelector(state => state.questionLoading);
+  const [isResettingSeenQuestions, setIsResettingSeenQuestions] =
+    useState(true);
 
   useEffect(() => {
-    dispatchAction($.getRandomQuestion());
+    const resetSeenQuestionIds = async () => {
+      await AsyncStorage.setItem('SEEN_QUESTION_IDS', '');
+      setIsResettingSeenQuestions(false);
+    };
+
+    resetSeenQuestionIds();
   }, []);
 
-  if (questionLoading)
-    return (
-      <View style={{flex: 1, backgroundColor: 'white'}}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+  if (isResettingSeenQuestions) return <View />;
 
   return (
     <NavigationContainer>

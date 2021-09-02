@@ -23,10 +23,11 @@ const errorText = [
 ];
 
 const ErrorPanel2 = ({route, navigation}) => {
-  const answer = useSelector(state => state.information);
   const {name} = route.params;
+
+  const answer = useSelector(state => state.information);
   const [index, setindex] = useState(-1);
-  console.log('name = ', name);
+
   useEffect(() => {
     if (name === '1') setindex(0);
     else if (name === '2') setindex(1);
@@ -35,7 +36,6 @@ const ErrorPanel2 = ({route, navigation}) => {
     else if (name === '5') setindex(4);
   });
 
-  console.log('index = ', index);
   return (
     <View
       style={{
@@ -58,7 +58,12 @@ const ErrorPanel2 = ({route, navigation}) => {
         {errorText[index]}
       </Text>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Stage4')}
+        onPress={() =>
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Home'}],
+          })
+        }
         style={{
           alignSelf: 'flex-end',
           backgroundColor: '#d8801d',
