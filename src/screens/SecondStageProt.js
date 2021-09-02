@@ -142,6 +142,7 @@ const SecondStageProt = ({navigation, route}) => {
   const {variableName, otherVariableName} = route.params;
 
   const [errs, seterrs] = useState([]);
+  const [isFirstEntry, setIsFirstEntry] = useState(true);
 
   const [isRModalVisible, setRModalVisible] = useState(false);
 
@@ -185,6 +186,7 @@ const SecondStageProt = ({navigation, route}) => {
         onChangeText={onChangeText}
         keyboardType="number-pad"
         style={{
+          color: 'black',
           width: 100,
           height: '77%',
           backgroundColor: 'white',
@@ -234,16 +236,6 @@ const SecondStageProt = ({navigation, route}) => {
   const renderInfo = info => {
     const {_id, text, optionsType, dropdownOptions} = info;
 
-    const [imageHeight, setImageHeight] = useState(0);
-
-    const {width: deviceWidth} = Dimensions.get('window');
-    const ImageWidth = (deviceWidth - 20) * 0.9;
-    useEffect(() => {
-      Image.getSize(question?.image, (imgWidth, imgHeight) => {
-        setImageHeight(ImageWidth * (imgHeight / imgWidth));
-      });
-    }, [question?.image, deviceWidth]);
-
     return (
       <View
         key={_id}
@@ -262,7 +254,13 @@ const SecondStageProt = ({navigation, route}) => {
             height: 15,
             padding: 6,
             marginRight: 5,
-          }}></View>
+            backgroundColor: isFirstEntry
+              ? 'transparent'
+              : errs.includes(_id)
+              ? 'red'
+              : 'green',
+          }}
+        />
         <Text
           style={{
             flex: 1,
@@ -290,10 +288,8 @@ const SecondStageProt = ({navigation, route}) => {
       const foundInformation = variable.find(
         info => info._id === numberOption._id,
       );
-      if (foundInformation?.correctAnswer !== numberOption.value) {
+      if (foundInformation?.correctAnswer !== numberOption.value)
         errors.push({infoId: numberOption._id, ...foundInformation?.error});
-        errs.push(0);
-      } else errs.push(1);
     });
 
     dropdownOptionValues.map(dropdownOption => {
@@ -307,9 +303,8 @@ const SecondStageProt = ({navigation, route}) => {
 
       if (parsedCorrectAnswer.length !== dropdownOption.value.length) {
         errors.push({infoId: dropdownOption._id, ...foundInformation?.error});
-        errs.push(0);
         return;
-      } else errs.push(1);
+      }
 
       let isCorrect = true;
       parsedCorrectAnswer.forEach(oneCorrectAnswer => {
@@ -319,6 +314,9 @@ const SecondStageProt = ({navigation, route}) => {
       if (!isCorrect)
         errors.push({infoId: dropdownOption._id, ...foundInformation?.error});
     });
+
+    seterrs(errors.map(err => err.infoId));
+    setIsFirstEntry(false);
 
     const nextPageN = otherVariable.length > 0 ? 'Stage3' : 'Stage4';
     const nextPage = variableName === 'information' ? 'Stage2' : 'Stage3';
@@ -331,8 +329,6 @@ const SecondStageProt = ({navigation, route}) => {
         navigation.navigate(nextPageN);
       }, 2000);
     }
-    console.log(errs);
-    seterrs([]);
   };
 
   const [imageHeight, setImageHeight] = useState(0);
