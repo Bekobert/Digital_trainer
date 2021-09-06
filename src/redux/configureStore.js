@@ -2,22 +2,7 @@ import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import CustomHttpService from '../services/CustomHttpService';
 import Api from './Api';
-
-const INITIAL_STATE = {
-  posts: [],
-};
-
-function reducer(state = INITIAL_STATE, action) {
-  switch (action.type) {
-    case 'SAVE_POSTS':
-      return {...state, posts: action.payload};
-
-    default:
-      break;
-  }
-
-  return state;
-}
+import reducer from './reducer';
 
 const httpService = new CustomHttpService();
 const api = new Api(httpService);

@@ -20,7 +20,7 @@ export default class Api {
     });
   };
 
-  getPosts = () => {
-    return this._doGet('/posts');
+  getRandomQuestion = seenIds => {
+    return this._doPost('/api/random', {seenIds});
   };
 }
