@@ -131,11 +131,12 @@ const LastStage = ({navigation}) => {
                   console.log('Is answer correct = ', answer?.isCorrect);
                   if (answer?.isCorrect) {
                     console.log(answer?._id);
-                    navigation.navigate('ErrorPanel2', {name: answer?.text});
+                    console.log('cevap : ', {error: answer.error});
+                    navigation.navigate('ErrorPanel2', {error: answer?.error});
                     //toggleRModal();
                   } else {
-                    console.log(' ');
-                    navigation.navigate('ErrorPanel2', {name: answer?.text});
+                    console.log('cevap : ', {error: answer.error});
+                    navigation.navigate('ErrorPanel2', {error: answer?.error});
                     //toggleWModal();
                   }
                 }}>
